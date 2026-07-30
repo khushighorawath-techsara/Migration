@@ -116,6 +116,18 @@ def head_size(key: str):
         raise
 
 
+def titlecase_folder_name(name: str) -> str:
+    """
+    THE canonical trainer-folder spelling. Must match the Lambda's helper of
+    the same name exactly -- that is what makes the fix permanent: every
+    source (Salesforce, Zoom topic, host email) converges on one spelling,
+    so no casing variant can ever be created again.
+
+    ved_sharma -> Ved_Sharma      Ved_Sharma -> Ved_Sharma (unchanged)
+    """
+    return "_".join(p[:1].upper() + p[1:] for p in name.split("_") if p)
+
+
 def list_trainer_folders(type_folder: str):
     """Immediate child folder names under Training/<type>/ (not recursive)."""
     prefix = f"Training/{type_folder}/"
@@ -260,6 +272,11 @@ def main():
                    help="Delete the lowercase copy after every object verifies.")
     p.add_argument("--limit", type=int, default=None,
                    help="Only process the first N merge pairs.")
+    p.add_argument("--normalize-all", action="store_true",
+                   help="Capitalize EVERY trainer folder in every type folder. "
+                        "Merges into an existing capitalized twin when one exists, "
+                        "renames when it does not. Run once alongside the Lambda "
+                        "titlecase change; after that nothing can drift.")
     p.add_argument("--auto", action="store_true",
                    help="Detect case-only duplicate trainer folders across ALL "
                         "type folders instead of using the hardcoded MERGES list. "
@@ -275,7 +292,28 @@ def main():
     log(f"Manifest: {os.path.abspath(MANIFEST_FILE)}")
     log(f"SNS:      {'ON' if SNS_TOPIC_ARN else 'OFF'}\n")
 
-    if args.auto:
+    if args.normalize_all:
+        log("Scanning every type folder for non-canonical trainer names...")
+        merges = []
+        for tf in TYPE_FOLDERS:
+            try:
+                names = list_trainer_folders(tf)
+            except Exception as exc:
+                log(f"  (could not list Training/{tf}/: {exc})")
+                continue
+            for n in names:
+                target = titlecase_folder_name(n)
+                if n != target:
+                    merges.append((tf, n, target))
+        if not merges:
+            log("\nEvery trainer folder is already canonical. Nothing to do.")
+            return
+        log(f"\n{len(merges)} folder(s) to normalize:")
+        for t, lo, up in merges:
+            existing = "MERGE into existing" if up in list_trainer_folders(t) else "RENAME"
+            log(f"  Training/{t}/{lo}  ->  {up}   [{existing}]")
+        log("")
+    elif args.auto:
         log("Auto-detecting case-only duplicate trainer folders...")
         merges = detect_merges()
         if not merges:
