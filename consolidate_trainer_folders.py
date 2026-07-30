@@ -73,6 +73,10 @@ MERGES = [
     ("Interview-Readiness", "ved_sharma",       "Ved_Sharma"),
 ]
 
+# Every type folder that can contain trainer folders. --auto scans all of them.
+TYPE_FOLDERS = ["Advanced", "Resume-Based", "Interview-Readiness",
+                "Retraining", "Other"]
+
 MANIFEST_FILE = os.environ.get("CONSOLIDATE_MANIFEST_PATH", "consolidate_manifest.json")
 SNS_TOPIC_ARN = os.environ.get("MIGRATION_SNS_TOPIC_ARN", "").strip()
 AWS_REGION    = os.environ.get("AWS_REGION", "us-east-1")
@@ -110,6 +114,64 @@ def head_size(key: str):
         if e.response.get("Error", {}).get("Code") in {"404", "NoSuchKey", "NotFound"}:
             return None
         raise
+
+
+def list_trainer_folders(type_folder: str):
+    """Immediate child folder names under Training/<type>/ (not recursive)."""
+    prefix = f"Training/{type_folder}/"
+    names = []
+    paginator = s3.get_paginator("list_objects_v2")
+    for page in paginator.paginate(Bucket=BUCKET, Prefix=prefix, Delimiter="/"):
+        for cp in page.get("CommonPrefixes", []):
+            name = cp["Prefix"][len(prefix):].rstrip("/")
+            if name:
+                names.append(name)
+    return names
+
+
+def detect_merges():
+    """
+    Find trainer folders that differ ONLY by case, across every type folder.
+
+    Safe by construction: two genuinely different trainers cannot have names
+    that are identical once lowercased, so a collision here is always the same
+    person. Anything with no case-variant twin is left alone -- this MERGES
+    duplicates, it never RENAMES a folder that stands on its own.
+
+    Winner = the one containing uppercase. If a group has zero or more than one
+    such variant, it is ambiguous and skipped with a warning rather than guessed.
+    """
+    found, ambiguous = [], []
+    for tf in TYPE_FOLDERS:
+        try:
+            names = list_trainer_folders(tf)
+        except Exception as exc:
+            log(f"  (could not list Training/{tf}/: {exc})")
+            continue
+        if not names:
+            continue
+
+        groups = defaultdict(list)
+        for n in names:
+            groups[n.lower()].append(n)
+
+        for key, variants in sorted(groups.items()):
+            if len(variants) < 2:
+                continue
+            capitalized = [v for v in variants if v != v.lower()]
+            if len(capitalized) != 1:
+                ambiguous.append((tf, variants))
+                continue
+            winner = capitalized[0]
+            for loser in variants:
+                if loser != winner:
+                    found.append((tf, loser, winner))
+
+    if ambiguous:
+        log("\n  AMBIGUOUS — skipped, resolve by hand:")
+        for tf, variants in ambiguous:
+            log(f"    Training/{tf}/  ->  {variants}")
+    return found
 
 
 def plan_merge(type_folder: str, lower: str, upper: str):
@@ -198,6 +260,12 @@ def main():
                    help="Delete the lowercase copy after every object verifies.")
     p.add_argument("--limit", type=int, default=None,
                    help="Only process the first N merge pairs.")
+    p.add_argument("--auto", action="store_true",
+                   help="Detect case-only duplicate trainer folders across ALL "
+                        "type folders instead of using the hardcoded MERGES list. "
+                        "Use this after any reclassification, which copies paths "
+                        "verbatim and can therefore carry casing variants into a "
+                        "new type folder.")
     args = p.parse_args()
 
     started = time.time()
@@ -207,8 +275,21 @@ def main():
     log(f"Manifest: {os.path.abspath(MANIFEST_FILE)}")
     log(f"SNS:      {'ON' if SNS_TOPIC_ARN else 'OFF'}\n")
 
+    if args.auto:
+        log("Auto-detecting case-only duplicate trainer folders...")
+        merges = detect_merges()
+        if not merges:
+            log("\nNo casing duplicates found in any type folder. Nothing to do.")
+            return
+        log(f"\nDetected {len(merges)} duplicate pair(s):")
+        for t, lo, up in merges:
+            log(f"  Training/{t}/{lo}  ->  Training/{t}/{up}")
+        log("")
+    else:
+        merges = MERGES
+
     log("Planning...")
-    plans = [plan_merge(t, lo, up) for t, lo, up in MERGES]
+    plans = [plan_merge(t, lo, up) for t, lo, up in merges]
     plans = [pl for pl in plans if pl["items"]]
 
     total_objects = sum(len(pl["items"]) for pl in plans)
