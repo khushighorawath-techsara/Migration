@@ -99,6 +99,7 @@ BUCKET = "zoom-automation-bucket"
 SOURCE_TYPE_PREFIXES = [
     "Training/Resume-Based/",
     "Training/Advanced/",
+    "Training/Interview-Readiness/",
     "Training/Other/",
 ]
 
