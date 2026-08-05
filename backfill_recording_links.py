@@ -430,6 +430,7 @@ def main():
         return
 
     written = failed = skipped = 0
+    failures = []          # collected so they can be listed together at the end
     for i, w in enumerate(to_write, 1):
         mkey = f"{w['object']}:{w['record_id']}"
         if manifest.get(mkey, {}).get("written"):
@@ -443,6 +444,7 @@ def main():
             log(f"[{i}/{len(to_write)}] {w['object']} {w['record_id']} <- {w['short_id']}")
         else:
             failed += 1
+            failures.append({**w, "error": err})
             log(f"[{i}/{len(to_write)}] FAILED {w['object']} {w['record_id']}: {err}")
 
         manifest[mkey] = {"written": ok, "url": w["url"], "meeting_id": w["meeting_id"],
@@ -459,11 +461,45 @@ def main():
     log(f"Untouched (already had a link): {already}")
     log(f"Elapsed: {elapsed // 60}m {elapsed % 60}s")
 
+    if failures:
+        # Grouped by Salesforce error so the cause is obvious at a glance --
+        # a validation rule blocking every legacy record reads very
+        # differently from a scattering of unrelated one-off failures.
+        log(f"\n{'=' * 74}")
+        log(f"FAILED RECORDS ({len(failures)}) — no link was written to these")
+        log(f"{'=' * 74}")
+
+        grouped = defaultdict(list)
+        for f in failures:
+            reason = f["error"]
+            try:
+                parsed_err = json.loads(reason)
+                if isinstance(parsed_err, list) and parsed_err:
+                    reason = parsed_err[0].get("message", reason)
+            except Exception:
+                pass
+            grouped[reason.strip()].append(f)
+
+        for reason, items in sorted(grouped.items(), key=lambda kv: -len(kv[1])):
+            log(f"\n  {len(items)} record(s): {reason}")
+            for f in items:
+                log(f"    {f['object']}  {f['record_id']}   meeting {f['meeting_id']}")
+                log(f"      would have been: {f['url']}")
+
+        failed_file = "backfill_failed_records.json"
+        with open(failed_file, "w") as fh:
+            json.dump(failures, fh, indent=2)
+        log(f"\n  Full detail written to {os.path.abspath(failed_file)}")
+        log(f"  These are safe to re-run once the underlying issue is resolved --")
+        log(f"  the manifest skips everything already written.")
+
     status = "COMPLETED WITH FAILURES" if failed else "COMPLETED OK"
     notify(f"Recording-link backfill {status} ({written} written, {failed} failed)",
            f"Host: {host}\nWritten: {written}\nFailed: {failed}\n"
            f"Already had a link: {already}\nDiffering (untouched): {len(mismatches)}\n"
-           f"No SF record: {no_record}\nElapsed: {elapsed // 60}m {elapsed % 60}s\n")
+           f"No SF record: {no_record}\nElapsed: {elapsed // 60}m {elapsed % 60}s\n"
+           + (f"\nFailed records are listed at the end of the log and in\n"
+              f"backfill_failed_records.json\n" if failures else ""))
 
 
 if __name__ == "__main__":
