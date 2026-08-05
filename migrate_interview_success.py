@@ -304,43 +304,79 @@ def scan_sessions():
     return sessions
 
 
-def parse_session_prefix(prefix):
-    """{host, year, month, candidate, company, date, round, meeting_id}"""
-    parts = prefix[len(DEPARTMENT):].rstrip("/").split("/")
-    date_idx = next((i for i, p in enumerate(parts) if DATE_RE.match(p)), None)
-    if date_idx is None or date_idx < 4:
-        return None
-    return {
-        "host":       parts[date_idx - 4],
-        "year":       parts[date_idx - 3],
-        "month":      parts[date_idx - 2],
-        "candidate":  parts[date_idx - 1],
-        "company":    parts[date_idx - 1],   # placeholder, corrected below
-        "date":       parts[date_idx],
-        "round":      parts[date_idx + 1] if len(parts) > date_idx + 1 else "",
-        "meeting_id": parts[date_idx + 2] if len(parts) > date_idx + 2 else "",
-        "parts":      parts,
-        "date_idx":   date_idx,
-    }
-
-
 def parse_full(prefix):
-    """Old actual-interview layout, 8 segments:
-    {Host}/{Y}/{M}/{Cand}/{Company}/{Date}/{Round}/{MID}
+    """
+    Interview-Success has TWO path shapes. Both anchor on the date, but the
+    segments around it sit in different places, so the shape must be detected
+    before anything is read.
+
+      CURRENT (what the Lambda writes today) -- 8 segments
+        {Host}/{Y}/{M}/{Cand}/{Company}/{Date}/{Round}/{MID}
+
+      LEGACY -- 9 segments, meeting id early, Time folder at the end
+        {Host}/{Y}/{M}/{Cand}/{MID}/{Company}/{Date}/{Round}/{Time-...}
+
+    WHY THIS MATTERS
+      The first version of this parser assumed the current shape and read
+      fixed offsets around the date. On a legacy path those offsets land on
+      the WRONG segments -- and it does not fail, it succeeds with wrong
+      values, producing a plausible-looking but scrambled destination such as
+      Interview-Success/Interview/2026/April/Cand/95771003069/Company/...
+      with the host missing entirely.
+
+      A parser that fails loudly is recoverable. One that silently returns
+      wrong answers is not, which is why the shape is now detected explicitly
+      rather than assumed.
+
+    DETECTION
+      Legacy paths end in a Time-* segment and carry a numeric meeting id two
+      places before the date. Current paths carry it immediately after the
+      round. Those two signals do not overlap.
+
+    Returns a dict including "layout": "current" | "legacy".
     """
     parts = prefix[len(DEPARTMENT):].rstrip("/").split("/")
     date_idx = next((i for i, p in enumerate(parts) if DATE_RE.match(p)), None)
-    if date_idx is None or date_idx < 5 or date_idx + 2 >= len(parts):
+    if date_idx is None:
+        return None
+
+    ends_with_time = parts[-1].lower().startswith("time-")
+    mid_before_company = (date_idx >= 2 and parts[date_idx - 2].isdigit()
+                          and len(parts[date_idx - 2]) >= 9)
+
+    if ends_with_time and mid_before_company:
+        # LEGACY: Host/Y/M/Cand/MID/Company/Date/Round/Time
+        # Host/Y/M/Cand/MID/Company/Date  ->  host is SIX before the date,
+        # not five. One extra segment (the meeting id) sits in between.
+        if date_idx < 6:
+            return None
+        return {
+            "layout":       "legacy",
+            "host":         parts[date_idx - 6],
+            "year":         parts[date_idx - 5],
+            "month":        parts[date_idx - 4],
+            "candidate":    parts[date_idx - 3],
+            "meeting_id":   parts[date_idx - 2],
+            "company":      parts[date_idx - 1],
+            "date":         parts[date_idx],
+            "round":        parts[date_idx + 1] if len(parts) > date_idx + 1 else "",
+            "time_folder":  parts[-1],
+        }
+
+    # CURRENT: Host/Y/M/Cand/Company/Date/Round/MID
+    if date_idx < 5 or date_idx + 2 >= len(parts):
         return None
     return {
-        "host":       parts[date_idx - 5],
-        "year":       parts[date_idx - 4],
-        "month":      parts[date_idx - 3],
-        "candidate":  parts[date_idx - 2],
-        "company":    parts[date_idx - 1],
-        "date":       parts[date_idx],
-        "round":      parts[date_idx + 1],
-        "meeting_id": parts[date_idx + 2],
+        "layout":      "current",
+        "host":        parts[date_idx - 5],
+        "year":        parts[date_idx - 4],
+        "month":       parts[date_idx - 3],
+        "candidate":   parts[date_idx - 2],
+        "company":     parts[date_idx - 1],
+        "date":        parts[date_idx],
+        "round":       parts[date_idx + 1],
+        "meeting_id":  parts[date_idx + 2],
+        "time_folder": "",
     }
 
 
@@ -379,11 +415,23 @@ def plan(sessions, sf_data):
             type_folder, reason = TYPE_ACTUAL, "session-exists-blank-purpose"
 
         if type_folder == TYPE_ACTUAL:
-            new_prefix = (f"{DEPARTMENT}{TYPE_ACTUAL}/{p['host']}/{p['year']}/"
-                          f"{p['month']}/{p['candidate']}/{p['company']}/"
-                          f"{p['date']}/{p['round']}/{p['meeting_id']}/")
+            if p["layout"] == "legacy":
+                # Preserve the legacy shape exactly -- meeting id stays early,
+                # Time folder stays at the end. Only the type segment is
+                # inserted, so nothing is lost and nothing is reordered.
+                new_prefix = (f"{DEPARTMENT}{TYPE_ACTUAL}/{p['host']}/{p['year']}/"
+                              f"{p['month']}/{p['candidate']}/{p['meeting_id']}/"
+                              f"{p['company']}/{p['date']}/{p['round']}/"
+                              f"{p['time_folder']}/")
+            else:
+                new_prefix = (f"{DEPARTMENT}{TYPE_ACTUAL}/{p['host']}/{p['year']}/"
+                              f"{p['month']}/{p['candidate']}/{p['company']}/"
+                              f"{p['date']}/{p['round']}/{p['meeting_id']}/")
         else:
-            time_folder = build_time_folder(sf) if sf else None
+            # A legacy path already carries a real Time folder from when the
+            # recording was made -- more trustworthy than one derived from a
+            # Salesforce timestamp, so prefer it.
+            time_folder = p.get("time_folder") or (build_time_folder(sf) if sf else None)
             if not time_folder:
                 skipped.append((prefix, f"{type_folder}: no usable Salesforce "
                                         f"timestamp — cannot build Time segment"))
