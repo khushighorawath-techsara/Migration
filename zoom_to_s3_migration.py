@@ -154,18 +154,54 @@ def load_processor():
 #  Zoom
 # ══════════════════════════════════════════════════════════════════════════════
 
-def zoom_token():
+def zoom_token(proc):
+    """Authenticate to Zoom using the LAMBDA'S OWN credential path.
+
+    WHY NOT .env
+      The Server-to-Server credentials the processor uses live in Secrets
+      Manager under ZOOM_SECRET_NAME. Those are known-good -- production
+      authenticates with them continuously.
+
+      Credentials pasted into .env are easy to get wrong: a Zoom account
+      typically has several apps, and only the Server-to-Server OAuth one
+      supports the account_credentials grant. An OAuth (user-authorised) app's
+      credentials look identical but fail with "The application doesn't support
+      account_credential" -- which is exactly what happened on the first run.
+
+      Reading the secret removes that whole class of mistake, and keeps
+      credentials off disk.
+
+    FALLBACK
+      If the secret cannot be read (usually a missing IAM permission), .env is
+      tried -- but only if all three values are present there.
+    """
+    try:
+        secret_obj = proc.get_zoom_secret()
+        token = proc.get_s2s_access_token(secret_obj)
+        log(f"  authenticated via Secrets Manager ({proc.ZOOM_SECRET_NAME})")
+        return token
+    except Exception as exc:
+        log(f"  Secrets Manager auth failed: {exc}")
+
     if not all([ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET]):
-        log("Zoom credentials missing from .env "
-            "(Account_Id, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET)")
+        log("\nERROR: could not authenticate to Zoom.\n"
+            f"  Reading {getattr(proc, 'ZOOM_SECRET_NAME', 'the Zoom secret')} "
+            f"failed, and .env does not have all three fallback values.\n\n"
+            "  Most likely the instance role lacks secretsmanager:GetSecretValue\n"
+            "  on that secret. Add it, or put the SERVER-TO-SERVER OAuth app's\n"
+            "  credentials in .env (an OAuth app's will not work).")
         sys.exit(1)
+
+    log("  falling back to .env credentials")
     basic = base64.b64encode(f"{ZOOM_CLIENT_ID}:{ZOOM_CLIENT_SECRET}".encode()).decode()
     r = requests.post("https://zoom.us/oauth/token",
                       params={"grant_type": "account_credentials",
                               "account_id": ZOOM_ACCOUNT_ID},
                       headers={"Authorization": f"Basic {basic}"}, timeout=30)
     if r.status_code != 200:
-        log(f"Zoom auth failed ({r.status_code}): {r.text}")
+        log(f"\nZoom auth failed ({r.status_code}): {r.text}\n"
+            "  If this says 'doesn't support account_credential', those are an\n"
+            "  OAuth app's credentials. Only a Server-to-Server OAuth app works.")
         sys.exit(1)
     return r.json()["access_token"]
 
@@ -385,7 +421,7 @@ def main():
     log(f"  {len(in_s3)} meeting id(s) already in S3\n")
 
     log("[3/5] Zoom auth + users ...")
-    token = zoom_token()
+    token = zoom_token(proc)
     users = list_users(token)
     log(f"  {len(users)} active user(s)\n")
 
