@@ -56,7 +56,9 @@ import argparse
 import base64
 import json
 import os
+import secrets
 import socket
+import string
 import sys
 import threading
 import time
@@ -105,6 +107,7 @@ SNS_TOPIC_ARN = os.environ.get("MIGRATION_SNS_TOPIC_ARN", "").strip()
 AWS_REGION    = os.environ.get("AWS_REGION", "us-east-1")
 
 SOQL_BATCH_SIZE = 200
+DATE_RE = __import__("re").compile(r"^\d{4}-\d{2}-\d{2}$")
 
 _cfg = Config(max_pool_connections=100, retries={"max_attempts": 10, "mode": "adaptive"})
 s3 = boto3.client("s3", region_name=AWS_REGION, config=_cfg)
@@ -260,6 +263,125 @@ def read_shortlink(key):
     return short_id, meeting_id, default_key
 
 
+ID_ALPHABET = string.ascii_letters + string.digits
+
+
+def generate_short_id(length=8):
+    return "".join(secrets.choice(ID_ALPHABET) for _ in range(length))
+
+
+def derive_prefix_from_key(key: str) -> str:
+    """Prefix for a new shortlink: everything above the media folder.
+
+    Matches what the download service derives at read time, so a shortlink
+    created here validates identically to one the linker wrote. The two must
+    agree -- default_key.startswith(prefix) is what the download service
+    checks, and a disagreement is exactly the bug that broke links before.
+    """
+    parts = key.strip("/").split("/")
+    if len(parts) < 3:
+        raise ValueError("unexpected recording key shape")
+    return "/".join(parts[:-2]) + "/"
+
+
+def parse_key_metadata(key: str) -> dict:
+    """Best-effort descriptive fields for the shortlink JSON.
+
+    Only cosmetic -- the download service reads default_key and prefix, not
+    these. Populated where the path makes them obvious rather than guessed at,
+    so a wrong candidate name never ends up presented as fact.
+    """
+    parts = key.strip("/").split("/")
+    meta = {"department": parts[0] if parts else "", "filename": parts[-1] if parts else ""}
+
+    date_idx = next((i for i, p in enumerate(parts) if DATE_RE.match(p)), None)
+    if date_idx is not None and date_idx >= 1:
+        meta["interview_date"] = parts[date_idx]
+        cand = parts[date_idx - 1]
+        if cand and not cand.isdigit():
+            meta["candidate_raw"] = cand
+            meta["candidate"] = cand.replace("_", " ")
+    return meta
+
+
+def create_shortlink(recording_key: str):
+    """Write a NEW shortlink JSON, same shape the linker produces.
+
+    Returns (short_id, url). Retries on the astronomically unlikely event of
+    an id collision rather than silently overwriting an existing shortlink --
+    that would break whatever link already points at it.
+    """
+    prefix = derive_prefix_from_key(recording_key)
+    meta = parse_key_metadata(recording_key)
+    mid = ""
+    parts = recording_key.strip("/").split("/")
+    if len(parts) >= 3 and parts[-3].isdigit():
+        mid = parts[-3]
+
+    for _ in range(15):
+        short_id = generate_short_id()
+        mapping_key = f"{SHORTLINK_PREFIX}{short_id}.json"
+        try:
+            s3.head_object(Bucket=BUCKET, Key=mapping_key)
+            continue                      # taken, try another
+        except Exception:
+            pass                          # free
+
+        payload = {
+            "version":        2,
+            "bucket":         BUCKET,
+            "prefix":         prefix,
+            "default_key":    recording_key,
+            "created_at":     datetime.now(timezone.utc).isoformat(),
+            "filename":       meta.get("filename", ""),
+            "candidate":      meta.get("candidate", ""),
+            "candidate_raw":  meta.get("candidate_raw", ""),
+            "company_raw":    "",
+            "trainer_raw":    "",
+            "training_type":  "",
+            "meeting_id":     mid,
+            "meeting_id_raw": mid,
+            "interview_date": meta.get("interview_date", ""),
+            "round_raw":      "",
+            "department":     meta.get("department", ""),
+            "_created_by":    "backfill_recording_links.py",
+        }
+        s3.put_object(Bucket=BUCKET, Key=mapping_key,
+                      Body=json.dumps(payload, separators=(",", ":")).encode(),
+                      ContentType="application/json")
+        return short_id, f"{DOWNLOAD_BASE_URL}?id={urllib.parse.quote(short_id, safe='')}"
+
+    raise RuntimeError("could not allocate a unique short id")
+
+
+def find_recordings_without_shortlinks(known_mids):
+    """{meeting_id: recording_key} for meetings that have an MP4 but no shortlink.
+
+    Only files inside a linkable media folder qualify, so the annotated
+    analysis video can never be chosen. Where a meeting has several, the first
+    is used -- they are all recordings of that meeting.
+    """
+    found = {}
+    paginator = s3.get_paginator("list_objects_v2")
+    scanned = 0
+    for page in paginator.paginate(Bucket=BUCKET):
+        for obj in page.get("Contents", []):
+            key = obj["Key"]
+            scanned += 1
+            if not key.lower().endswith(".mp4"):
+                continue
+            parts = key.split("/")
+            if len(parts) < 3 or parts[-2].lower() not in MEDIA_FOLDERS:
+                continue
+            mid = parts[-3]
+            if not mid.isdigit() or mid in known_mids or mid in found:
+                continue
+            found[mid] = key
+        if scanned % 100000 < 1000:
+            log(f"    ...scanned {scanned} objects, {len(found)} candidate(s)")
+    return found
+
+
 def build_shortlink_index(workers):
     """{meeting_id: {"short_id", "url", "key"}}
 
@@ -325,6 +447,11 @@ def main():
                    help="Actually write to Salesforce. Without this: dry run.")
     p.add_argument("--limit", type=int, default=None, help="Only the first N records.")
     p.add_argument("--workers", type=int, default=32, help="Concurrent shortlink reads.")
+    p.add_argument("--create-missing-shortlinks", action="store_true",
+                   help="Also CREATE a shortlink for recordings that have none, "
+                        "then link it. Off by default: creating shortlinks is a "
+                        "materially different operation from reusing existing "
+                        "ones and should be an explicit choice.")
     args = p.parse_args()
 
     if not DOWNLOAD_BASE_URL:
@@ -346,6 +473,18 @@ def main():
         log("No usable shortlinks. Nothing to do.")
         return
     log("")
+
+    pending_new = {}
+    if args.create_missing_shortlinks:
+        log("Scanning for recordings that have NO shortlink ...")
+        pending_new = find_recordings_without_shortlinks(set(index))
+        log(f"  {len(pending_new)} recording(s) have no shortlink\n")
+        # Registered with a placeholder url so they flow through the same
+        # Salesforce matching below. The real shortlink is only created for
+        # those that turn out to need a link -- creating one for a recording
+        # with no Salesforce record would leave an orphan nobody can reach.
+        for mid, key in pending_new.items():
+            index[mid] = {"short_id": None, "url": None, "key": key, "needs_create": True}
 
     sf = get_sf_secret()
     token, instance_url = sf_login(sf)
@@ -377,13 +516,14 @@ def main():
 
         if rec["link"]:
             already += 1
-            if rec["link"] != sl["url"]:
+            if sl["url"] and rec["link"] != sl["url"]:
                 mismatches.append((mid, obj, rec["id"], rec["link"], sl["url"]))
             continue
 
         to_write.append({"meeting_id": mid, "object": obj, "field": field,
                          "record_id": rec["id"], "url": sl["url"],
-                         "short_id": sl["short_id"], "key": sl["key"]})
+                         "short_id": sl["short_id"], "key": sl["key"],
+                         "needs_create": sl.get("needs_create", False)})
 
     log("Summary:")
     log(f"  need a link  : {len(to_write)}")
@@ -422,7 +562,8 @@ def main():
         log("\n=== DRY RUN — nothing written to Salesforce ===\n")
         for w in to_write[:25]:
             log(f"  {w['object']} {w['record_id']}  meeting {w['meeting_id']}")
-            log(f"    {w['field']} <- {w['url']}")
+            log(f"    {w['field']} <- " +
+                (w["url"] if w["url"] else "(a NEW shortlink would be created)"))
             log(f"    from {w['key']}\n")
         if len(to_write) > 25:
             log(f"  ... and {len(to_write) - 25} more\n")
@@ -436,6 +577,20 @@ def main():
         if manifest.get(mkey, {}).get("written"):
             skipped += 1
             continue
+
+        # Create the shortlink only now, for a record that genuinely needs a
+        # link. Doing it during planning would leave orphaned shortlinks for
+        # every recording without a Salesforce record.
+        if w.get("needs_create") and not w["url"]:
+            try:
+                sid, url = create_shortlink(w["key"])
+                w["short_id"], w["url"] = sid, url
+                log(f"[{i}/{len(to_write)}] created shortlink {sid} for {w['key']}")
+            except Exception as exc:
+                failed += 1
+                failures.append({**w, "error": f"shortlink creation failed: {exc}"})
+                log(f"[{i}/{len(to_write)}] FAILED to create shortlink: {exc}")
+                continue
 
         ok, err = sf_patch(token, instance_url, w["object"], w["record_id"],
                            w["field"], w["url"])
