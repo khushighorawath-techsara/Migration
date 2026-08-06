@@ -87,6 +87,9 @@ S3_BUCKET          = os.environ.get("S3_BUCKET_NAME", "zoom-automation-bucket")
 AWS_REGION         = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 SNS_TOPIC_ARN      = os.environ.get("MIGRATION_SNS_TOPIC_ARN", "").strip()
 LAMBDA_PATH        = os.environ.get("PROCESSOR_LAMBDA_PATH", "lambda_function.py")
+# Must match the processor Lambda's own ZOOM_SECRET_NAME -- those are the
+# Server-to-Server credentials production authenticates with every day.
+ZOOM_SECRET_NAME   = os.environ.get("ZOOM_SECRET_NAME", "zoom/general-oauth")
 MANIFEST_FILE      = os.environ.get("ZOOM_MIGRATION_MANIFEST", "zoom_migration_manifest.json")
 
 _cfg = Config(max_pool_connections=64, retries={"max_attempts": 10, "mode": "adaptive"})
@@ -130,7 +133,11 @@ def load_processor():
             f"migration at all.")
         sys.exit(1)
 
-    os.environ.setdefault("ZOOM_SECRET_NAME", "placeholder")
+    # The Lambda reads these at import time. ZOOM_SECRET_NAME must be the REAL
+    # secret name -- get_zoom_secret() uses it directly, so a placeholder here
+    # produces "not authorized ... on resource: placeholder", which reads like
+    # an IAM problem when it is actually a wrong name being requested.
+    os.environ.setdefault("ZOOM_SECRET_NAME", ZOOM_SECRET_NAME)
     os.environ.setdefault("S3_BUCKET_NAME", S3_BUCKET)
 
     spec = importlib.util.spec_from_file_location("processor", LAMBDA_PATH)
@@ -727,4 +734,4 @@ if __name__ == "__main__":
         tb = traceback.format_exc()
         log(f"\n!!! CRASHED !!!\n{tb}")
         notify("Zoom -> S3 migration CRASHED", f"{exc}\n\n{tb}")
-        sys.exit(1)
+		sys.exit(1)
