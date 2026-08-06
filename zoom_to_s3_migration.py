@@ -672,10 +672,22 @@ def build_prefix_for(proc, entry, participants):
 
     program_name = program_folder = trainer_sf = session_type = None
     if dept == "Training":
+        # UNPACK BY LENGTH, NOT BY A FIXED COUNT.
+        #
+        # This function's return width has grown as fields were added --
+        # session_type was appended most recently. Unpacking a fixed number of
+        # values means a future addition silently raises "too many values to
+        # unpack", the exception is swallowed, program_name stays None, and
+        # EVERY training recording lands in Training/Other/ while Salesforce
+        # was answering correctly all along.
+        #
+        # That is not hypothetical: it is exactly what the dry run caught.
         try:
-            (_day, _step, _cand, program_name,
-             trainer_sf, _host_user, _purpose) = proc.lookup_training_day_from_sf(
-                entry["meeting_id"])
+            res = proc.lookup_training_day_from_sf(entry["meeting_id"])
+            if res:
+                program_name = res[3] if len(res) > 3 else None
+                trainer_sf   = res[4] if len(res) > 4 else None
+                session_type = res[7] if len(res) > 7 else None
         except Exception as exc:
             log(f"        (Salesforce lookup failed for {entry['meeting_id']}: {exc})")
 
@@ -684,12 +696,6 @@ def build_prefix_for(proc, entry, participants):
                 program_folder, _reason = proc.resolve_program_folder(program_name)
             except Exception:
                 program_folder = proc.program_folder_name(program_name)
-
-        if hasattr(proc, "lookup_session_type_from_sf"):
-            try:
-                session_type = proc.lookup_session_type_from_sf(entry["meeting_id"])
-            except Exception:
-                session_type = None
 
     info = proc.resolve_storage_info(
         department_folder=dept,
@@ -734,4 +740,4 @@ if __name__ == "__main__":
         tb = traceback.format_exc()
         log(f"\n!!! CRASHED !!!\n{tb}")
         notify("Zoom -> S3 migration CRASHED", f"{exc}\n\n{tb}")
-		sys.exit(1)
+        sys.exit(1)
