@@ -406,6 +406,12 @@ def main():
                         "through this machine, unlike S3-to-S3 copies, so more "
                         "workers means more bandwidth contention, not less time.")
     p.add_argument("--days", type=int, default=365, help="How far back on Zoom.")
+    p.add_argument("--host", default=None,
+                   help="Only consider recordings whose host email contains this "
+                        "text, case-insensitive (e.g. --host diya). Use this for a "
+                        "targeted recovery of one person's recordings instead of "
+                        "sweeping the whole account. Everyone else is skipped "
+                        "entirely -- not listed, not queried, not touched.")
     p.add_argument("--cleanup-zoom", action="store_true",
                    help="After a meeting's files are uploaded AND verified, hand "
                         "it to the existing zoom-recording-cleaner queue so the "
@@ -461,8 +467,23 @@ def main():
 
     todo, skip_in_s3, skip_no_dept, skip_bad_dept = [], [], [], []
 
+    host_filter = (args.host or "").strip().lower()
+    if host_filter:
+        log(f"  --host {args.host!r}: only hosts whose email contains this are "
+            f"considered; all others are skipped before any Zoom call.\n")
+
+    skipped_by_host_filter = 0
+
     for i, u in enumerate(users, 1):
         uid, email = u.get("id"), (u.get("email") or "")
+
+        # Applied BEFORE list_recordings() so a filtered run makes no API calls
+        # for anyone else -- it is a genuine narrowing of scope, not a display
+        # filter over a full scan.
+        if host_filter and host_filter not in email.lower():
+            skipped_by_host_filter += 1
+            continue
+
         raw_dept = (u.get("dept") or "").strip()
         dept = proc.normalize_department(raw_dept)
 
@@ -496,6 +517,9 @@ def main():
 
     def gb(rows):
         return sum(r["size"] for r in rows) / (1024 ** 3)
+
+    if host_filter:
+        log(f"\n  ({skipped_by_host_filter} host(s) skipped by --host filter)")
 
     log(f"\n[5/5] Scope")
     log("=" * 74)
