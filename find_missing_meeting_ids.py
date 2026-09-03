@@ -391,6 +391,98 @@ def build_index():
 #  Matching
 # ══════════════════════════════════════════════════════════════════════════════
 
+# ══════════════════════════════════════════════════════════════════════════════
+#  Real meeting start times, from Zoom
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# WHY THIS EXISTS
+#   Only the generic department layout carries a Time-H-MM-AM-IST folder.
+#   Interview-Success uses {Company}/{Date}/{Round}/ instead, so roughly two
+#   thirds of sessions have NO clock anywhere in their S3 path. Time therefore
+#   could not rank them, and a human cannot verify them by time either.
+#
+#   That matters most exactly where it is scarcest: when one candidate has
+#   several sessions on the same day with different hosts, the clock is the
+#   only thing that separates them.
+#
+#   Zoom knows the true start_time for every meeting id. Fetching it turns time
+#   from a missing signal into a verifiable column on every row.
+#
+# Optional by design -- without credentials the script still runs exactly as
+# before, using whatever Time- folders happen to exist.
+
+IST = datetime.timezone(datetime.timedelta(hours=5, minutes=30))
+_zoom_cache = {}
+
+
+def _zoom_token():
+    acct = os.environ.get("Account_Id") or os.environ.get("ZOOM_ACCOUNT_ID")
+    cid  = os.environ.get("ZOOM_CLIENT_ID")
+    sec  = os.environ.get("ZOOM_CLIENT_SECRET")
+
+    if not all([acct, cid, sec]):
+        # Same secret the processor Lambda uses -- known-good credentials,
+        # and it avoids a second place where they could be wrong.
+        try:
+            import json
+            raw = json.loads(boto3.client("secretsmanager", region_name=AWS_REGION)
+                             .get_secret_value(SecretId=os.environ.get(
+                                 "ZOOM_SECRET_NAME", "zoom/general-oauth"))["SecretString"])
+            acct = acct or raw.get("ZOOM_ACCOUNT_ID") or raw.get("Account_Id")
+            cid  = cid  or raw.get("ZOOM_CLIENT_ID")
+            sec  = sec  or raw.get("ZOOM_CLIENT_SECRET")
+        except Exception as exc:
+            log(f"  (no Zoom credentials: {exc})")
+            return None
+
+    if not all([acct, cid, sec]):
+        return None
+    try:
+        import base64, requests
+        basic = base64.b64encode(f"{cid}:{sec}".encode()).decode()
+        r = requests.post("https://zoom.us/oauth/token",
+                          params={"grant_type": "account_credentials", "account_id": acct},
+                          headers={"Authorization": f"Basic {basic}"}, timeout=30)
+        if r.status_code != 200:
+            log(f"  (Zoom auth failed {r.status_code}: {r.text[:120]})")
+            return None
+        return r.json()["access_token"]
+    except Exception as exc:
+        log(f"  (Zoom auth error: {exc})")
+        return None
+
+
+def zoom_start_ist(token, meeting_id):
+    """(minutes past midnight IST, date) for a meeting, or (None, None).
+
+    Zoom returns UTC; S3 and the source sheet are IST, so it is converted here
+    and the DATE is returned too -- a UTC evening meeting is the next day in
+    IST, and comparing against the wrong date would look like a mismatch.
+    """
+    if not token or not meeting_id:
+        return None, None
+    if meeting_id in _zoom_cache:
+        return _zoom_cache[meeting_id]
+    try:
+        import requests
+        r = requests.get(f"https://api.zoom.us/v2/past_meetings/{meeting_id}",
+                         headers={"Authorization": f"Bearer {token}"}, timeout=30)
+        if r.status_code != 200:
+            _zoom_cache[meeting_id] = (None, None)
+            return None, None
+        st = r.json().get("start_time")
+        if not st:
+            _zoom_cache[meeting_id] = (None, None)
+            return None, None
+        dt = datetime.datetime.fromisoformat(st.replace("Z", "+00:00")).astimezone(IST)
+        out = (dt.hour * 60 + dt.minute, dt.date())
+        _zoom_cache[meeting_id] = out
+        return out
+    except Exception:
+        _zoom_cache[meeting_id] = (None, None)
+        return None, None
+
+
 def match_row(row, sessions, by_cand_token, day_window):
     """Return (tier, reason, [ranked matches])."""
     cand = row["candidate"]
@@ -514,6 +606,13 @@ def main():
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--xlsx", required=True, help="Source spreadsheet.")
     p.add_argument("--out", default="meeting_id_results.xlsx", help="Output file.")
+    p.add_argument("--no-zoom", action="store_true",
+                   help="Skip the Zoom start-time lookup. Without it, time can "
+                        "only be checked on the ~1/3 of sessions whose S3 path "
+                        "contains a Time- folder.")
+    p.add_argument("--time-tolerance", type=int, default=45,
+                   help="Minutes. A pick whose real start differs by more than "
+                        "this is flagged for review (default 45).")
     p.add_argument("--day-window", type=int, default=1,
                    help="Days either side of the source date to accept (default 1). "
                         "One day absorbs the timezone problem: a 2 AM IST session "
@@ -575,6 +674,48 @@ def main():
             "alts": alts, "n_alts": max(0, len(hits) - 1),
         })
 
+    # ── real start times ────────────────────────────────────────────────────
+    if not args.no_zoom:
+        log("\n  Fetching real start times from Zoom ...")
+        tok = _zoom_token()
+        if not tok:
+            log("  no Zoom credentials -- falling back to Time- folders only\n")
+        else:
+            done = 0
+            for res in results:
+                if not res["meeting_id"]:
+                    continue
+                tmin, tdate = zoom_start_ist(tok, res["meeting_id"])
+                res["zoom_time"] = tmin
+                res["zoom_date"] = tdate
+                done += 1
+                if done % 40 == 0:
+                    log(f"    ...{done} looked up")
+            got = sum(1 for r in results if r.get("zoom_time") is not None)
+            log(f"  got a real start time for {got} of {done} meeting(s)\n")
+
+    # ── compare against the source time ─────────────────────────────────────
+    flagged = 0
+    for res in results:
+        row = res["row"]
+        zt  = res.get("zoom_time")
+        if zt is None or not row.get("times"):
+            res["time_gap"] = ""
+            res["time_ok"]  = "no clock available" if zt is None else ""
+            continue
+        best = min(min(abs(t - zt), 1440 - abs(t - zt)) for t, _d, _n in row["times"])
+        res["time_gap"] = best
+        if best <= 5:
+            res["time_ok"] = "exact"
+        elif best <= args.time_tolerance:
+            res["time_ok"] = "close"
+        else:
+            res["time_ok"] = f"OFF BY {best//60}h{best%60:02d} — CHECK"
+            flagged += 1
+    if flagged:
+        log(f"  {flagged} row(s) have a start time more than "
+            f"{args.time_tolerance} min from the scheduled slot\n")
+
     log("\n=== Result ===")
     labels = {"A": "A  confident, one match",
               "B": "B  several matches, ranked",
@@ -591,15 +732,21 @@ def main():
     wb = openpyxl.Workbook(); ws = wb.active; ws.title = "Results"
     ws.append(list(header) + ["Meeting ID", "Confidence", "Why", "Department",
                               "S3 candidate", "S3 host", "Who hosted", "S3 date",
-                              "Name match", "Time reading", "Other candidates",
+                              "Name match", "Time reading", "Actual start (IST)",
+                              "Time gap (min)", "Time check", "Other candidates",
                               "S3 prefix"])
     for r in results:
         ws.append(list(r["row"]["raw"]) + [
             r["meeting_id"], r["tier"], r["reason"], r["department"],
             r["s3_candidate"], r["s3_host"], r["host_is"], r["s3_date"],
-            r["how"], r["tz_note"], r["alts"], r["prefix"]])
-    for col, w in zip("ABCDEFGHIJKLMNOPQR",
-                      [8,12,24,26,20,16,14,30,14,11,42,18,24,20,12,12,44,60]):
+            r["how"], r["tz_note"],
+            (f"{r['zoom_time']//60:02d}:{r['zoom_time']%60:02d}"
+             if r.get("zoom_time") is not None else ""),
+            r.get("time_gap", ""), r.get("time_ok", ""),
+            r["alts"], r["prefix"]])
+    for col, w in zip("ABCDEFGHIJKLMNOPQRSTU",
+                      [8,12,24,26,20,16,14,30,14,11,42,18,24,20,22,12,12,26,
+                       16,12,22]):
         ws.column_dimensions[col].width = w
     ws.freeze_panes = "A2"
     wb.save(args.out)
