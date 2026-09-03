@@ -778,10 +778,22 @@ def main():
             res["verdict"] = "NO MATCH"; verdict_tally["NO MATCH"] += 1; continue
 
         name_ok = res["how"] in ("exact", "subset")
-        date_ok = bool(row["date"]) and str(res["s3_date"]) == row["date"].isoformat()
-        # Prefer Zoom's real start; fall back to the S3 date when Zoom had none.
-        if res.get("zoom_date"):
-            date_ok = bool(row["date"]) and res["zoom_date"] == row["date"]
+        # ACCEPT EITHER DATE CONVENTION.
+        #
+        # The S3 folder date is taken from Zoom's UTC timestamp, while
+        # zoom_date here is the same meeting expressed in IST. For anything
+        # after 18:30 UTC those are DIFFERENT CALENDAR DAYS -- a 21:00 UTC
+        # meeting is 2026-08-13 in S3 and 2026-08-14 in IST.
+        #
+        # The source sheet does not say which convention it follows, and it
+        # visibly uses both. Insisting on one was marking rows whose time
+        # matched TO THE MINUTE as date mismatches, which is plainly wrong:
+        # an exact start-time match is far stronger evidence than a date label
+        # whose timezone is unstated.
+        src_iso  = row["date"].isoformat() if row["date"] else None
+        date_ok  = bool(src_iso) and (
+            str(res["s3_date"]) == src_iso or
+            (res.get("zoom_date") and res["zoom_date"].isoformat() == src_iso))
         gap = res.get("time_gap", "")
         time_ok = isinstance(gap, int) and gap <= args.time_tolerance
         time_unknown = not isinstance(gap, int)
