@@ -75,6 +75,8 @@ DATE_OVERRIDES = {
 }
 
 # Tokens that carry no identifying information and appear on one side only.
+HOST_MATCH_BONUS = float(os.environ.get("HOST_MATCH_BONUS", "0.60"))
+
 NOISE_TOKENS = {"na", "n", "a", "ms", "mr", "mrs", "dr", "not", "applicable"}
 
 s3 = boto3.client("s3", region_name=AWS_REGION)
@@ -428,7 +430,17 @@ def match_row(row, sessions, by_cand_token, day_window):
                 continue
             ok, _, _ = names_match(val, s["host"])
             if ok:
-                return label, 0.18
+                # Deliberately large. A trainer or proxy name matching the S3
+                # host folder is the STRONGEST evidence available -- it is a
+                # second independent person agreeing, not a spelling variant.
+                #
+                # At 0.18 it was being swamped: two sessions for the same
+                # candidate on the same day, one hosted by the named trainer
+                # with the candidate's name spelled in a different order, the
+                # other hosted by a stranger with the name spelled exactly.
+                # The name gap (~0.3) beat the host bonus and the stranger's
+                # session won. Ranking spelling above identity is backwards.
+                return label, HOST_MATCH_BONUS
         return "", 0.0
 
     def trainer_bonus(s):
