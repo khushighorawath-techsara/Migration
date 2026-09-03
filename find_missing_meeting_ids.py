@@ -416,39 +416,35 @@ _zoom_cache = {}
 
 
 def _zoom_token():
-    acct = os.environ.get("Account_Id") or os.environ.get("ZOOM_ACCOUNT_ID")
-    cid  = os.environ.get("ZOOM_CLIENT_ID")
-    sec  = os.environ.get("ZOOM_CLIENT_SECRET")
+    """Authenticate by reusing the processor Lambda's OWN credential code.
 
-    if not all([acct, cid, sec]):
-        # Same secret the processor Lambda uses -- known-good credentials,
-        # and it avoids a second place where they could be wrong.
-        try:
-            import json
-            raw = json.loads(boto3.client("secretsmanager", region_name=AWS_REGION)
-                             .get_secret_value(SecretId=os.environ.get(
-                                 "ZOOM_SECRET_NAME", "zoom/general-oauth"))["SecretString"])
-            acct = acct or raw.get("ZOOM_ACCOUNT_ID") or raw.get("Account_Id")
-            cid  = cid  or raw.get("ZOOM_CLIENT_ID")
-            sec  = sec  or raw.get("ZOOM_CLIENT_SECRET")
-        except Exception as exc:
-            log(f"  (no Zoom credentials: {exc})")
-            return None
+    A standalone loader has to guess what the secret's JSON keys are called,
+    and guessing wrong fails with 'no Zoom credentials' -- which reads like a
+    permissions problem when it is actually a key-name problem. The Lambda
+    already knows the shape and authenticates with it in production every day,
+    so its functions are called rather than reimplemented.
 
-    if not all([acct, cid, sec]):
+    Needs lambda_function.py beside this script; without it, time verification
+    is simply skipped and the run continues.
+    """
+    path = os.environ.get("PROCESSOR_LAMBDA_PATH", "lambda_function.py")
+    if not os.path.exists(path):
+        log(f"  ({path} not found -- skipping Zoom time lookup)")
         return None
     try:
-        import base64, requests
-        basic = base64.b64encode(f"{cid}:{sec}".encode()).decode()
-        r = requests.post("https://zoom.us/oauth/token",
-                          params={"grant_type": "account_credentials", "account_id": acct},
-                          headers={"Authorization": f"Basic {basic}"}, timeout=30)
-        if r.status_code != 200:
-            log(f"  (Zoom auth failed {r.status_code}: {r.text[:120]})")
-            return None
-        return r.json()["access_token"]
+        import importlib.util
+        os.environ.setdefault("ZOOM_SECRET_NAME",
+                              os.environ.get("ZOOM_SECRET_NAME", "zoom/general-oauth"))
+        os.environ.setdefault("S3_BUCKET_NAME", BUCKET)
+        spec = importlib.util.spec_from_file_location("_proc", path)
+        proc = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(proc)
+        tok = proc.get_s2s_access_token(proc.get_zoom_secret())
+        log(f"  authenticated via Secrets Manager "
+            f"({getattr(proc, 'ZOOM_SECRET_NAME', 'zoom secret')})")
+        return tok
     except Exception as exc:
-        log(f"  (Zoom auth error: {exc})")
+        log(f"  (Zoom auth failed: {exc})")
         return None
 
 
@@ -716,6 +712,49 @@ def main():
         log(f"  {flagged} row(s) have a start time more than "
             f"{args.time_tolerance} min from the scheduled slot\n")
 
+    # ── the strict verdict ──────────────────────────────────────────────────
+    # The stated bar is date AND time AND candidate. Anything short of that is
+    # a lead, not an answer -- so it is labelled as such rather than being
+    # counted alongside the confirmed rows.
+    import datetime as _dt
+    verdict_tally = defaultdict(int)
+    for res in results:
+        row = res["row"]
+        if not res["meeting_id"]:
+            res["verdict"] = "NO MATCH"; verdict_tally["NO MATCH"] += 1; continue
+
+        name_ok = res["how"] in ("exact", "subset")
+        date_ok = bool(row["date"]) and str(res["s3_date"]) == row["date"].isoformat()
+        # Prefer Zoom's real start; fall back to the S3 date when Zoom had none.
+        if res.get("zoom_date"):
+            date_ok = bool(row["date"]) and res["zoom_date"] == row["date"]
+        gap = res.get("time_gap", "")
+        time_ok = isinstance(gap, int) and gap <= args.time_tolerance
+        time_unknown = not isinstance(gap, int)
+        host_ok = bool(res["host_is"]) and "neither" not in res["host_is"]
+
+        if name_ok and date_ok and time_ok:
+            v = "VERIFIED" if host_ok else "VERIFIED (other host)"
+        elif name_ok and date_ok and time_unknown:
+            v = "NO TIME — unconfirmed"
+        elif name_ok and date_ok:
+            v = "TIME MISMATCH — check"
+        elif name_ok and time_ok:
+            v = "DATE MISMATCH — check"
+        else:
+            v = "WEAK — check"
+        res["verdict"] = v
+        verdict_tally[v] += 1
+
+    log("\n=== Verdict (date + time + candidate all confirmed) ===")
+    for k in ("VERIFIED", "VERIFIED (other host)", "NO TIME — unconfirmed",
+              "TIME MISMATCH — check", "DATE MISMATCH — check", "WEAK — check",
+              "NO MATCH"):
+        if verdict_tally[k]:
+            log(f"  {k:26s} {verdict_tally[k]:4d}")
+    strong = verdict_tally["VERIFIED"] + verdict_tally["VERIFIED (other host)"]
+    log(f"\n  {strong} row(s) meet the full bar")
+
     log("\n=== Result ===")
     labels = {"A": "A  confident, one match",
               "B": "B  several matches, ranked",
@@ -733,8 +772,8 @@ def main():
     ws.append(list(header) + ["Meeting ID", "Confidence", "Why", "Department",
                               "S3 candidate", "S3 host", "Who hosted", "S3 date",
                               "Name match", "Time reading", "Actual start (IST)",
-                              "Time gap (min)", "Time check", "Other candidates",
-                              "S3 prefix"])
+                              "Time gap (min)", "Time check", "VERDICT",
+                              "Other candidates", "S3 prefix"])
     for r in results:
         ws.append(list(r["row"]["raw"]) + [
             r["meeting_id"], r["tier"], r["reason"], r["department"],
@@ -742,11 +781,11 @@ def main():
             r["how"], r["tz_note"],
             (f"{r['zoom_time']//60:02d}:{r['zoom_time']%60:02d}"
              if r.get("zoom_time") is not None else ""),
-            r.get("time_gap", ""), r.get("time_ok", ""),
+            r.get("time_gap", ""), r.get("time_ok", ""), r.get("verdict", ""),
             r["alts"], r["prefix"]])
-    for col, w in zip("ABCDEFGHIJKLMNOPQRSTU",
+    for col, w in zip("ABCDEFGHIJKLMNOPQRSTUV",
                       [8,12,24,26,20,16,14,30,14,11,42,18,24,20,22,12,12,26,
-                       16,12,22]):
+                       16,12,24,22,22]):
         ws.column_dimensions[col].width = w
     ws.freeze_panes = "A2"
     wb.save(args.out)
