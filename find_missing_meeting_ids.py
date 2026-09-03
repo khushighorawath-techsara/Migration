@@ -657,7 +657,7 @@ def main():
         alts = "; ".join(
             f"{h[0]['meeting_id']} ({h[0]['date']} {h[0]['department']})" for h in hits[1:6])
         results.append({
-            "row": r, "tier": tier, "reason": reason,
+            "row": r, "tier": tier, "reason": reason, "hits": hits,
             "meeting_id": best["meeting_id"] if best else "",
             "prefix":     best["prefix"] if best else "",
             "department": best["department"] if best else "",
@@ -689,6 +689,60 @@ def main():
                     log(f"    ...{done} looked up")
             got = sum(1 for r in results if r.get("zoom_time") is not None)
             log(f"  got a real start time for {got} of {done} meeting(s)\n")
+
+            # ── RE-PICK using real times ────────────────────────────────
+            # The ranker chose before any real clock was known, using name,
+            # date and whatever Time- folder happened to exist. Now that Zoom
+            # has given a true start for every meeting, any row whose pick is
+            # far from its scheduled slot is revisited: the alternatives are
+            # looked up too, and if one lands closer it takes over.
+            #
+            # This is the opposite of loosening a threshold. It uses a NEW,
+            # harder fact to overturn a weaker guess -- the same candidate on
+            # the same day with two sessions is exactly the case the clock
+            # exists to resolve.
+            repicked = 0
+            for res in results:
+                row = res["row"]
+                if not res["meeting_id"] or not row.get("times"):
+                    continue
+                zt = res.get("zoom_time")
+                cur = (min(min(abs(t - zt), 1440 - abs(t - zt)) for t, _d, _n in row["times"])
+                       if zt is not None else 10**6)
+                if cur <= args.time_tolerance:
+                    continue                      # already good
+
+                best, best_gap = None, cur
+                for s, how, score in res.get("hits", [])[:8]:
+                    if s["meeting_id"] == res["meeting_id"]:
+                        continue
+                    at, ad = zoom_start_ist(tok, s["meeting_id"])
+                    if at is None:
+                        continue
+                    g = min(min(abs(t - at), 1440 - abs(t - at)) for t, _d, _n in row["times"])
+                    # Only overturn on a CLEARLY better fit, and only when the
+                    # replacement is itself within tolerance. A marginal
+                    # improvement is not evidence.
+                    if g < best_gap and g <= args.time_tolerance:
+                        best, best_gap = (s, how, at, ad), g
+
+                if best:
+                    s, how, at, ad = best
+                    res.update({"meeting_id": s["meeting_id"], "prefix": s["prefix"],
+                                "department": s["department"], "s3_candidate": s["candidate"],
+                                "s3_host": s["host"],
+                                "s3_date": str(s["date"]) if s["date"] else "",
+                                "how": how, "zoom_time": at, "zoom_date": ad})
+                    who = ""
+                    for lbl, val in (("Trainer/Interviewer", row.get("trainer")),
+                                     ("Proxy Person", row.get("proxy"))):
+                        if val and names_match(val, s["host"])[0]:
+                            who = lbl; break
+                    res["host_is"] = who or "neither -- a third person hosted"
+                    res["reason"] += "  [re-picked on real start time]"
+                    repicked += 1
+            if repicked:
+                log(f"  re-picked {repicked} row(s) using the real start time")
 
     # ── compare against the source time ─────────────────────────────────────
     flagged = 0
