@@ -69,6 +69,27 @@ _spec.loader.exec_module(M)
 log = M.log
 
 
+def folder_is_placeholder(folder, proxy) -> bool:
+    """True when the S3 candidate folder carries no real third party.
+
+    A proxy-hosted session whose folder is Group/Unknown, or the proxy's own
+    name, simply had no external participant resolved -- consistent with a
+    coaching call. But a folder naming a REAL DIFFERENT PERSON means the proxy
+    was hosting somebody else's session at that time, and matching it to this
+    row would be wrong.
+
+    Manual review proved this matters: of 49 rows matched on proxy + time
+    alone, 42 named a different real person. Only 7 were placeholders.
+    """
+    def n(s):
+        return " ".join(re.sub(r"[^a-z0-9 ]", " ",
+                               str(s or "").replace("_", " ").lower()).split())
+    f, p = n(folder), n(proxy)
+    if not f or f in ("group", "unknown", "unknown candidate") or "unknown" in f:
+        return True
+    return bool(p) and (f == p or f in p or p in f)
+
+
 def review_outcome(value) -> str:
     """Collapse the free-text review note into one state.
 
@@ -228,11 +249,22 @@ def main():
                           f"scheduled slot" if isinstance(gap, int) and gap < 10**5
                           else "no clock available to confirm")
             tally["P2"] += 1
-        elif gap <= args.time_window:
-            res["conf"] = "P3 — proxy hosted at the right time, candidate folder differs"
-            res["why"] = (f"S3 candidate folder is {best['candidate']!r}, not "
-                          f"{cand!r} — likely no external participant was resolved")
+        elif gap <= args.time_window and folder_is_placeholder(best["candidate"], proxy):
+            res["conf"] = "P3 — proxy hosted at the right time, no third party named"
+            res["why"] = (f"S3 folder is {best['candidate']!r} — a placeholder or the "
+                          f"proxy's own name, so no external participant was resolved")
             tally["P3"] += 1
+        elif gap <= args.time_window:
+            # The proxy WAS recorded at this time -- hosting someone else.
+            # That is not our session, and reporting it as a find would be
+            # worse than reporting nothing.
+            res["conf"] = "NOT FOUND — proxy was with a different candidate"
+            res["why"] = (f"{proxy} hosted a session at the right time, but with "
+                          f"{best['candidate']!r}, not {cand!r}. No proxy session "
+                          f"with this candidate was recorded at this time.")
+            res["alts"] = f"{best['meeting_id']} (different candidate); " + res["alts"]
+            res["mid"] = ""          # do not hand back a meeting id we do not trust
+            tally["proxy busy with someone else"] += 1
         else:
             res["conf"] = "P4 — proxy hosted that day, nothing else lines up"
             res["why"] = (f"{proxy} hosted {len(on_date)} session(s) that date but none "
@@ -245,12 +277,16 @@ def main():
 
     # ── report ──────────────────────────────────────────────────────────────
     log("\n=== Proxy-side result ===")
-    for k in ("P1", "P2", "P3", "P4", "no proxy named", "proxy hosts nothing",
+    for k in ("P1", "P2", "P3", "P4", "proxy busy with someone else",
+              "no proxy named", "proxy hosts nothing",
               "proxy hosted nothing that date"):
         if tally[k]:
             log(f"  {k:34s} {tally[k]:4d}")
-    log(f"\n  {tally['P1']} row(s) have a proxy-hosted session with the candidate "
-        f"AND the time confirmed")
+    usable = tally["P1"] + tally["P2"] + tally["P3"]
+    log(f"\n  {tally['P1']} row(s) fully confirmed (proxy + candidate + time)")
+    log(f"  {usable} row(s) usable in total (P1 + P2 + P3)")
+    log(f"  {tally['proxy busy with someone else']} row(s) rejected — the proxy was "
+        f"recorded with a DIFFERENT candidate at that time")
 
     # ── write ───────────────────────────────────────────────────────────────
     out = openpyxl.Workbook(); o = out.active; o.title = "Proxy"
