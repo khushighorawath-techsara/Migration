@@ -266,9 +266,21 @@ def main():
             res["mid"] = ""          # do not hand back a meeting id we do not trust
             tally["proxy busy with someone else"] += 1
         else:
+            # P4 is a statement that NOTHING matched -- so it must not hand back
+            # a meeting id. Leaving one attached let a session already correctly
+            # assigned to its real candidate get claimed a second time by an
+            # unrelated row, purely because the same proxy worked that day.
+            # The id stays visible in the alternatives column for the trail.
             res["conf"] = "P4 — proxy hosted that day, nothing else lines up"
             res["why"] = (f"{proxy} hosted {len(on_date)} session(s) that date but none "
-                          f"with this candidate or near the scheduled time")
+                          f"with this candidate or near the scheduled time "
+                          f"(closest was {best['candidate']!r}, "
+                          f"{gap//60}h{gap%60:02d} away)"
+                          if isinstance(gap, int) and gap < 10**5 else
+                          f"{proxy} hosted {len(on_date)} session(s) that date but none "
+                          f"with this candidate, and no clock was available")
+            res["alts"] = f"{best['meeting_id']} (not matched); " + res["alts"]
+            res["mid"] = ""
             tally["P4"] += 1
 
         results[i] = res
