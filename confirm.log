@@ -1,0 +1,22 @@
+nohup: ignoring input
+  listed 100000 objects ...
+  listed 200000 objects ...
+  listed 300000 objects ...
+  listed 400000 objects ...
+listed 434108 objects, 51058 meeting folders
+Interview-Success/Internal-Interview/ meeting folders: 254
+Training/Interview-Readiness/ meeting folders: 3000
+reading participants.json in 2639 folders ...
+
+candidate folders:
+  analysed  analysed-file  20
+  ir        id             71
+  ir        name           96
+  ir        search         1696
+  is        id             220
+  is        id-other-date  8
+  is        name           12
+  is        search         1497
+with participants.json: 3076 of 3620
+
+written: candidates.csv
