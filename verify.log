@@ -1,0 +1,38 @@
+nohup: ignoring input
+  listed 100000 objects ...
+  listed 200000 objects ...
+  listed 300000 objects ...
+  listed 400000 objects ...
+listed 433463 objects, 51003 meeting folders
+Interview-Success/Internal-Interview/ meeting folders: 253
+Training/Interview-Readiness/ meeting folders: 2989
+reading 41720 shortlinks ...
+shortlinks pointing at an mp4: 72265
+analysed files: 157 of 157 found in S3
+
+VERDICTS:
+  IS_IN_S3                     188
+  IS_IN_S3_BY_NAME             10
+  IS_IN_S3_SEVERAL             16
+  IS_NOT_IN_S3                 4
+  IS_NO_ID_NOT_FOUND           62
+  IS_ONLY_IN_ZOOM              13
+  NO_SHOW                      4
+  ir has shortlink: no         151
+  ir has shortlink: yes        146
+  ir now in: HOME              104
+  ir now in: Interview-Success 12
+  ir now in: Interview-Success/Internal-Interview 21
+  ir now in: Interview-Success/Interview 5
+  ir now in: Training/Other    1
+  ir now in: Training/Resume-Based 3
+  ir: IR_BY_NAME               79
+  ir: IR_IN_S3                 67
+  ir: IR_NO_ID                 151
+  is has shortlink: no         82
+  is has shortlink: yes        215
+  is now in: HOME              1
+  is now in: Interview-Success 36
+  is now in: Interview-Success/Interview 178
+
+written: verify_report.csv, analysed_files_report.csv, layout.txt
