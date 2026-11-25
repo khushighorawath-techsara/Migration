@@ -12,6 +12,8 @@ Homes: IS session -> Interview-Success/Internal-Interview/ (IS department)
        IR session -> Training/Interview-Readiness/        (IR department, where the IR host's recordings already go)
 """
 import sys, re, csv, json, time, base64, datetime as dt, collections, urllib.request, urllib.parse, urllib.error
+import os
+os.environ.setdefault("AWS_DEFAULT_REGION", "us-east-1")
 import boto3
 from concurrent.futures import ThreadPoolExecutor
 
@@ -131,6 +133,12 @@ def zget(path):
         return {"_error": e.code}
 
 def zoom_check(mid, day, start):
+    try:
+        return _zoom_check(mid, day, start)
+    except Exception as e:                      # one bad Zoom call must not stop the whole run
+        return f"zoom check failed: {type(e).__name__}", ""
+
+def _zoom_check(mid, day, start):
     inst = zget(f"/past_meetings/{mid}/instances")
     if "_error" in inst: return f"zoom error {inst['_error']}", ""
     want = None
