@@ -1,0 +1,18 @@
+nohup: ignoring input
+MODE: DRY RUN (nothing is written to S3)
+  listed 100000 objects ...
+  listed 200000 objects ...
+  listed 300000 objects ...
+  listed 400000 objects ...
+listed 435232 objects, 51145 meeting folders
+Interview-Success/Internal-Interview/ meeting folders: 255
+Training/Interview-Readiness/ meeting folders: 3018
+
+CHECKS:
+  HOLD_CLASH       21
+  HOLD_REUSED_ID   11
+  IR_LINK_NEEDED   63
+  OK               170
+  ZOOM_FOUND       13
+
+written: copy_check.csv, shortlink_samples.json
