@@ -1,0 +1,298 @@
+mock_key,source,mock_no,mock_date,start_ist,end_ist,candidate,ir_person,is_person,is_meeting_id,ir_meeting_id,ir_session,company,round,round_info,analysis_file,flags
+nomid_2026-07-16_2200,old,O1,2026-07-16,22:00,22:30,Hitesh,Mudit Singh,Arch Dedakiya,,94601720227,,,,,,
+nomid_2026-07-16_2200,old,O2,2026-07-16,22:00,23:00,Manali Mahavir Patil,Prachi,Lipakshi Banpurkar,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 93490389605 was hosted by a third person
+nomid_2026-07-16_2230,old,O3,2026-07-16,22:30,23:30,Srividya Medipelly,Shikhar,Yashvi Nagar,,,,,,,,old check: VERIFIED (other host); proxy: NOT FOUND — proxy was with a different candid; found meeting 91455796944 was hosted by a third person
+nomid_2026-07-16_0030,old,O4,2026-07-16,00:30,01:30,Rithwik VNS Musunuri,Vishakha Arya,Yashvi Nagar,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 95803214878 was hosted by a third person
+94988606124_2026-07-16_0200,old,O5,2026-07-16,02:00,03:00,Kaushik Sriram,Vishakha Arya,Lipakshi Banpurkar,94988606124,,,,,,,"old check: TIME MISMATCH — check; proxy: P2 — proxy hosted with this candidate, time i"
+94524791254_2026-07-17_2200,old,O6,2026-07-17,22:00,23:00,Sanjay Budde,Naghma,Ishita Aggarwal,94524791254,,,,,,rec6_2026-07-17_94524791254_is_rubric.json,
+nomid_2026-07-17_2130,old,O7,2026-07-17,21:30,22:30,Sanjana Maila,Ronak,Prachi Pundir,,94047606241,,,,,,
+nomid_2026-07-17_1130,old,O8,2026-07-17,11:30,12:30,Priya Kunam,Shaily Soni,,,97814262844,,,,,,old check: TIME MISMATCH — check
+92619573844_2026-07-17_0130,old,O9,2026-07-17,01:30,02:30,Manali Mahavir Patil,Yashvi,Shikhar Mishra,92619573844,,,,,,rec9_2026-07-17_92619573844_is_rubric.json,
+97081761368_2026-07-20_2100,old,O10,2026-07-20,21:00,22:00,Priya Kunam,Ronak,Harish Sharma,97081761368,,,,,,rec10_2026-07-20_97081761368_is_rubric.json,
+nomid_2026-07-20_2130,old,O11,2026-07-20,21:30,22:30,Manali Mahavir Patil,Nigam,Nitin,,,,,,,,old check: TIME MISMATCH — check; found meeting 93965081295 was hosted by a third person
+98095168765_2026-07-20_2130,old,O12,2026-07-20,21:30,22:30,Sindooja Gajam,Ishita,Shikhar Mishra,98095168765,,,,,,,
+nomid_2026-07-20_0100,old,O13,2026-07-20,01:00,02:00,Akhilendra Sirikonda,Vishakha Arya,Prachi Pundir,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 94985177974 was hosted by a third person
+nomid_nodate_0200,old,O14,,02:00,03:00,Pranay Reddy Shashidhar Reddy,Vishakha Arya,,,,,,,,,date unreadable: ; old check: WEAK — check; found meeting 97969822610 was hosted by a third person
+nomid_2026-07-21_2200,old,O15,2026-07-21,22:00,22:30,Shiva Prasad,Ronak Chaudhary,,,,,,,,,old check: VERIFIED (other host); found meeting 93754831018 was hosted by a third person
+nomid_2026-07-21_2230,old,O16,2026-07-21,22:30,23:00,Faraz,Ronak Chaudhary,,,,,,,,,old check: NO MATCH
+nomid_2026-07-21_2330,old,O17,2026-07-21,23:30,00:00,Abrar Shaikh,Ronak Chaudhary,Arch Dedakiya,,,,,,,,old check: WEAK — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 91094905960 was hosted by a third person
+98190078371_2026-07-21_0030,old,O18,2026-07-21,00:30,01:00,Hitesh,Ronak Chaudhary,Ronak Thakar,98190078371,93064759247,,,,,,"proxy: P3 — proxy hosted at the right time, no third"
+94498312977_2026-07-21_0100,old,O19,2026-07-21,01:00,01:30,Supraja Mudireddy,Yashvi Nagar,Shikhar Mishra,94498312977,,,,,,,old check: WEAK — check
+96854950804_2026-07-21_0130,old,O20,2026-07-21,01:30,02:00,Sai Pavan Reddy,Ronak Chaudhary,Pranav Sawant,96854950804,92734465592,,,,,rec20_2026-07-21_96854950804_is_rubric.json,
+98358941519_2026-07-21_0200,old,O21,2026-07-21,02:00,02:30,Meghamsh NA Routhu,Ishita Aggarwal,Arch Dedakiya,98358941519,,,,,,rec21_2026-07-21_98358941519_is_rubric.json,old check: WEAK — check
+nomid_2026-07-21_0300,old,O22,2026-07-21,03:00,03:30,Monica Challa,Hemangi Shah,Harish Sharma,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 99937728357 was hosted by a third person
+99718671063_2026-07-22_2200,old,O23,2026-07-22,22:00,22:30,Arbaaz Uddin NA Mohammed,Mudit,Ishita Aggarwal,99718671063,92128513244,,,,,rec23_2026-07-22_99718671063_is_rubric.json,old check: WEAK — check
+93448473210_2026-07-22_2200,old,O24,2026-07-22,22:00,22:30,Abrar Shaik,Lipakshi Banpurkar,Hemangi Shah,93448473210,,,,,,,
+nomid_2026-07-23_0300,old,O25,2026-07-23,03:00,03:30,Tarunteja N/A Obbina,Ronak Chaudhary,Shikhar Mishra,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 92972898611 was hosted by a third person
+97717247698_2026-07-23_0300,old,O26,2026-07-23,03:00,04:00,Arbaaz Uddin NA Mohammed,Ronak Thakar,Ishita Aggarwal,97717247698,,,,,,rec26_2026-07-22_97717247698_is_rubric.json,old check: TIME MISMATCH — check
+96182792269_2026-07-23_0300,old,O27,2026-07-23,03:00,03:30,Isha N/A Valiveti,hemangi,Yashvi Nagar,96182792269,,,,,,rec27_2026-07-22_96182792269_is_rubric.json,proxy: NOT FOUND — proxy was with a different candid; analysis names IS 'Hemangi Shah'
+97139648921_2026-07-27_0130,old,O28,2026-07-27,01:30,02:00,Hitesh,Ronak Chaudhary,Yashvi Nagar,97139648921,,,,,,rec28_2026-07-27_97139648921_is_rubric.json,
+91579691147_2026-07-28_0130,old,O29,2026-07-28,01:30,02:00,Sanjay N/A Budde,Mudit,Pranav Sawant,91579691147,,,,,,rec29_2026-07-27_91579691147_is_rubric.json,old check: TIME MISMATCH — check
+97177486278_2026-07-28_0330,old,O30,2026-07-28,03:30,04:00,Supraja Vaddi,Shaily Soni,Yashvi Nagar,97177486278,,,,,,rec30_2026-07-27_97177486278_is_rubric.json,old check: TIME MISMATCH — check
+93515511842_2026-07-29_1930,old,O31,2026-07-29,19:30,20:00,Abhiram Rachakonda,Harish Sharma,Prachi Pundir,93515511842,98574658378,,,,,rec31_2026-07-29_93515511842_is_rubric.json,
+95415731285_2026-07-29_2000,old,O32,2026-07-29,20:00,20:30,Sai Sravani Medam,Ronak Thakar,Shikhar Mishra,95415731285,,,,,,rec32_2026-07-29_95415731285_is_rubric.json,old check: TIME MISMATCH — check
+99489055373_2026-07-29_2030,old,O33,2026-07-29,20:30,09:30,Manideep N/A Thogiti,Ronak Thakar,Arch Dedakiya,99489055373,,,,,,rec33_2026-07-29_99489055373_is_rubric.json,
+93676619159_2026-07-29_2030,old,O34,2026-07-29,20:30,21:00,Bala Kishore Gonga,Naghma Akhtar,Lipakshi Banpurkar,93676619159,,,,,,rec34_2026-07-29_93676619159_is_rubric.json,old check: TIME MISMATCH — check
+96771753211_2026-07-29_2100,old,O35,2026-07-29,21:00,21:30,Sanketh Reddy Reddy Patlola,Abhishek Jain,Hemangi Shah,96771753211,94551815856,,,,,rec35_2026-07-29_96771753211_is_rubric.json,
+97226885224_2026-07-29_2230,old,O36,2026-07-29,22:30,23:00,Ishan Kiran N/A Girgaonkar,Lipakshi Banpurkar,Arch Dedakiya,97226885224,,,,,,rec36_2026-07-29_97226885224_is_rubric.json,
+93703057981_2026-07-29_2230,old,O37,2026-07-29,22:30,23:00,Phanindhar Reddy N/A Mamidi,Ved Sharma,Shikhar Mishra,93703057981,96964515517,,,,,rec37_2026-07-29_93703057981_is_rubric.json,
+98615017157_2026-07-30_0300,old,O38,2026-07-30,03:00,03:30,Pavan Suresh,Hemangi Shah,Yashvi Nagar,98615017157,,,,,,rec38_2026-07-29_98615017157_is_rubric.json,old check: TIME MISMATCH — check
+99196457858_2026-07-30_0230,old,O39,2026-07-30,02:30,03:00,Sai Pavan Reddy Doddam Reddy,Ishita Aggarwal,Shikhar Mishra,99196457858,,,,,,rec39_2026-07-29_99196457858_is_rubric.json,old check: DATE MISMATCH — check
+nomid_2026-07-30_2030,old,O40,2026-07-30,20:30,21:00,Meesum Syed Hussain,Naghma Akhtar,Lipakshi Banpurkar,,95861873717,,,,,,proxy: NOT FOUND — proxy was with a different candid
+91849460161_2026-07-30_0000,old,O41,2026-07-30,00:00,00:30,Rajya Lakshmi Namireddy,shailvi saroliya,Prachi Pundir,91849460161,,,,,,rec41_2026-07-30_91849460161_is_rubric.json,old check: TIME MISMATCH — check
+93880955971_2026-07-31_2000,old,O42,2026-07-31,20:00,20:30,Abhiram Rachakonda,Naghma Akhtar,Yashvi Nagar,93880955971,95585606873,,,,,rec42_2026-07-31_93880955971_is_rubric.json,
+92826514527_2026-07-31_2030,old,O43,2026-07-31,20:30,21:00,Abdu Raziq N/A Hidayathulla,Prachi,Pranav Sawant,92826514527,,,,,,rec43_2026-07-31_92826514527_is_rubric.json,
+93455850496_2026-07-31_2130,old,O44,2026-07-31,21:30,22:00,Ruturaj Bharat Nilawar,Mudit,Arch Dedakiya,93455850496,,,,,,rec44_2026-07-31_93455850496_is_rubric.json,
+99519865137_2026-08-03_2000,old,O45,2026-08-03,20:00,20:30,Rajya Lakshmi Namireddy,Naghma Akhtar,Shikhar Mishra,99519865137,,,,,,,
+92997043520_2026-08-03_2000,old,O46,2026-08-03,20:00,20:30,Sanjana N/A Maila,Shaily Soni,Harish Sharma,92997043520,,,,,,rec46_2026-08-03_92997043520_is_rubric.json,
+94197537947_2026-08-03_2030,old,O47,2026-08-03,20:30,21:00,Bala Kishore Gonga,Naghma Akhtar,Pranav Sawant,94197537947,,,,,,rec47_2026-08-03_94197537947_is_rubric.json,old check: TIME MISMATCH — check
+98083966769_nodate_2030,old,O48,,20:30,21:00,Sai Chandra Palle,Prachi,Lipakshi Banpurkar,98083966769,,,,,,rec48_2026-08-04_98083966769_is_rubric.json,date unreadable: Today
+93962771991_nodate_2130,old,O49,,21:30,22:00,Thanshith Kannedari,Lipakshi Banpurkar,Ishita Aggarwal,93962771991,,,,,,,date unreadable: Today
+98570384216_nodate_2200,old,O50,,22:00,22:30,Bala Kishore Gonga,Lipakshi Banpurkar,Arch Dedakiya,98570384216,,,,,,rec50_2026-08-04_98570384216_is_rubric.json,date unreadable: Today; old check: WEAK — check
+97911487898_nodate_2230,old,O51,,22:30,23:00,Srividya Medipelly,Mudit,Yashvi Nagar,97911487898,,,,,,rec51_2026-08-04_97911487898_is_rubric.json,date unreadable: Today
+93111452072_2026-08-05_0200,old,O52,2026-08-05,02:00,02:30,Syed Faraaz Ahmed,Shaily Soni,Yashvi Nagar,93111452072,,,,,,rec52_2026-08-04_93111452072_is_rubric.json,old check: TIME MISMATCH — check
+nomid_2026-08-05_2000,old,O53,2026-08-05,20:00,20:30,Akhilendra N/A Sirikonda,Prachi,Yashvi Nagar,,99446724066,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid
+nomid_2026-08-05_2000,old,O54,2026-08-05,20:00,20:30,Rajya Lakshmi Namireddy,Lipakshi Banpurkar,Hemangi Shah,,93863323910,,,,,,old check: WEAK — check; proxy: NOT FOUND — proxy was with a different candid
+99245621224_2026-08-05_2100,old,O55,2026-08-05,21:00,21:30,Pavani Rajanala,Hemangi Shah,Pranav Sawant,99245621224,96081929619,,,,,rec55_2026-08-05_99245621224_is_rubric.json,
+93420509629_2026-08-05_2100,old,O56,2026-08-05,21:00,21:30,Srividya Medipelly,Arch,Ishita Aggarwal,93420509629,94640296019,,,,,rec56_2026-08-05_93420509629_is_rubric.json,
+98686557403_2026-08-05_2230,old,O57,2026-08-05,22:30,23:00,Tejashwini Gundlapally,Maithilya Patle,Lipakshi Banpurkar,98686557403,,,,,,rec57_2026-08-05_98686557403_is_rubric.json,
+91949345737_2026-08-05_2200,old,O58,2026-08-05,22:00,22:30,Bala Kishore Gonga,Hemangi Shah,Pranav Sawant,91949345737,,,,,,rec58_2026-08-05_91949345737_is_rubric.json,old check: TIME MISMATCH — check
+98968286420_2026-08-05_2300,old,O59,2026-08-05,23:00,23:30,Pavani Rajanala,Maithilya Patle,Pranav Sawant,98968286420,97652677678,,,,,rec59_2026-08-05_98968286420_is_rubric.json,
+nomid_2026-08-05_0030,old,O60,2026-08-05,00:30,01:00,Rithwik VNS Musunuri,Naghma Akhtar,Arch Dedakiya,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 97908181340 was hosted by a third person
+97093618881_2026-08-05_0100,old,O61,2026-08-05,01:00,01:30,Vidya Chandrashekhar Nomula,Naghma Akhtar,Hemangi Shah,97093618881,97482979608,,,,,rec61_2026-08-05_97093618881_is_rubric.json,
+93875778639_2026-08-06_0300,old,O62,2026-08-06,03:00,03:30,Arbaaz Uddin Mohammed,Harish Sharma,Pranav Sawant,93875778639,,,,,,rec62_2026-08-05_93875778639_is_rubric.json,old check: TIME MISMATCH — check
+94729408934_2026-08-06_1930,old,O63,2026-08-06,19:30,20:00,Abdu Raziq Hidayathulla,Arch,Prachi Pundir,94729408934,92908102092,,,,,rec63_2026-08-06_94729408934_is_rubric.json,
+95693426166_2026-08-06_1930,old,O64,2026-08-06,19:30,20:00,Mohammed Abdul Nawaaf,Hemangi Shah,Ishita Aggarwal,95693426166,98431118967,,,,,rec64_2026-08-06_95693426166_is_rubric.json,
+96175888202_2026-08-06_1930,old,O65,2026-08-06,19:30,20:00,Divya Anjali Bolimela Umesh,Sanjana Gupta,Lipakshi Banpurkar,96175888202,,,,,,,"old check: TIME MISMATCH — check; proxy: P3 — proxy hosted at the right time, no third"
+92199391202_2026-08-06_2100,old,O66,2026-08-06,21:00,21:30,Nithin Pulla,Hemangi Shah,Pranav Sawant,92199391202,96372728522,,,,,rec66_2026-08-06_92199391202_is_rubric.json,
+96511792919_2026-08-06_2130,old,O67,2026-08-06,21:30,22:00,Bala Kishore Gonga,Ved Sharma,Abhishek Jain,96511792919,,,,,,rec67_2026-08-06_96511792919_is_rubric.json,old check: TIME MISMATCH — check
+94940716732_2026-08-06_2200,old,O68,2026-08-06,22:00,22:30,Harshavardhan Mandava,Shaily Soni,Lipakshi Banpurkar,94940716732,,,,,,,"old check: TIME MISMATCH — check; proxy: P3 — proxy hosted at the right time, no third"
+nomid_2026-08-06_2300,old,O69,2026-08-06,23:00,23:30,Shivkumar Subhash Kothale,Mudit,Ronak Thakar,,93242349711,,,,,,proxy: NOT FOUND — proxy was with a different candid
+97657738639_2026-08-07_0230,old,O70,2026-08-07,02:30,03:00,Abdu Raziq N/A Hidayathulla,Dev Purohit,Ishita Aggarwal,97657738639,,,,,,rec70_2026-08-06_97657738639_is_rubric.json,old check: TIME MISMATCH — check
+91692301943_2026-08-07_1930,old,O71,2026-08-07,19:30,20:00,Sai Chandra Palle,Ronak Thakar,Prachi Pundir,91692301943,97411563054,,,,,rec71_2026-08-07_91692301943_is_rubric.json,
+92257446915_2026-08-07_2030,old,O72,2026-08-07,20:30,21:00,Dhruvi Rajubhai Ramani,Arch,Hemangi Shah,92257446915,,,,,,,
+nomid_2026-08-07_2030,old,O73,2026-08-07,20:30,21:00,Akhilendra NA Sirikonda,Dev Purohit,Harish Sharma,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 91526796710 was hosted by a third person
+nomid_2026-08-07_2130,old,O74,2026-08-07,21:30,22:00,Rohanth Gundu,Ved Sharma,Vivek Parmar,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 94231356915 was hosted by a third person
+91991345467_2026-08-07_2200,old,O75,2026-08-07,22:00,22:30,Srividya Medipelly,Abhishek Jain,Lipakshi Banpurkar,91991345467,,,,,,,
+92081327560_2026-08-07_0130,old,O76,2026-08-07,01:30,02:00,Manikanta Not Applicable Pochamalla,Naghma Akhtar,Pranav Sawant,92081327560,,,,,,,old check: DATE MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid
+92619932784_2026-08-10_0300,old,O77,2026-08-10,03:00,03:30,Farhan Wajid Mohammed,Mudit,Abhishek Jain,92619932784,,,,,,,"old check: TIME MISMATCH — check; proxy: P2 — proxy hosted with this candidate, time i"
+nomid_2026-08-10_0200,old,O78,2026-08-10,02:00,02:30,Shikha N/A Patel,Hemangi Shah,Ishita Aggarwal,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 97916640773 was hosted by a third person
+nomid_2026-08-10_0230,old,O79,2026-08-10,02:30,03:00,Divya Anjali N/A Bolimela Umesh,Ronak Thakar,Shikhar Mishra,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 93337400207 was hosted by a third person
+nomid_2026-08-10_0230,old,O80,2026-08-10,02:30,03:00,Rohanth Gundu,Naghma Akhtar,Arch Dedakiya,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 98873021045 was hosted by a third person
+nomid_2026-08-10_0230,old,O81,2026-08-10,02:30,03:30,Thanshith Kannedari,Maithilya Patle,Lipakshi Banpurkar,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 93464896446 was hosted by a third person
+97646329341_2026-08-10_2100,old,O82,2026-08-10,21:00,21:30,Isha N/A Valiveti,Arch,Harish Sharma,97646329341,91461407044,,,,,rec82_2026-08-10_97646329341_is_rubric.json,
+96249637180_2026-08-10_2130,old,O83,2026-08-10,21:30,22:00,Syed Faraaz Ahmed,Hemangi Shah,Ishita Aggarwal,96249637180,,,,,,rec83_2026-08-10_96249637180_is_rubric.json,
+97481303177_2026-08-11_2000,old,O84,2026-08-11,20:00,20:30,Saisandeep N/A Gorla,Shaily Soni,Ishita Aggarwal,97481303177,98463332390,,,,,rec84_2026-08-11_97481303177_is_rubric.json,
+97004819103_2026-08-11_2030,old,O85,2026-08-11,20:30,21:00,Isha N/A Valiveti,Mudit,Pranav Sawant,97004819103,,,,,,rec85_2026-08-11_97004819103_is_rubric.json,
+93633437329_2026-08-11_2030,old,O86,2026-08-11,20:30,21:00,Srinivas Nuggehalli Venkatesh,Arch,Yashvi Nagar,93633437329,,,,,,,
+96155896942_2026-08-11_2000,old,O87,2026-08-11,20:00,20:30,Samyukth - Challa,Mudit,Yashvi Nagar,96155896942,,,,,,rec87_2026-08-11_96155896942_is_rubric.json,
+97384491663_2026-08-11_2200,old,O88,2026-08-11,22:00,22:30,Srinivas Nuggehalli Venkatesh,Arch,Shikhar Mishra,97384491663,91548784785,,,,,,old check: WEAK — check
+97689237476_2026-08-11_2130,old,O89,2026-08-11,21:30,22:00,Sai Sharan Mankala,Khushali Prasad,Pranav Sawant,97689237476,,,,,,rec89_2026-08-11_97689237476_is_rubric.json,
+nomid_2026-08-11_2230,old,O90,2026-08-11,22:30,23:00,Rithwik VNS Musunuri,Margi,Radhika Gupta,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 94713614471 was hosted by a third person
+95253406435_2026-08-11_2300,old,O91,2026-08-11,23:00,23:30,Jagadeesh Vadapalli,Margi,Harish Sharma,95253406435,,,,,,,"old check: TIME MISMATCH — check; proxy: P2 — proxy hosted with this candidate, time i"
+96235365826_2026-08-11_0030,old,O92,2026-08-11,00:30,01:30,Soham Amit Shah,Khushali Prasad,Hemangi Shah,96235365826,97122293668,,,,,rec92_2026-08-11_96235365826_is_rubric.json,
+95325372240_2026-08-12_0000,old,O93,2026-08-12,00:00,00:30,Jagadeesh Kakamolu,Shaily Soni,Radhika Gupta,95325372240,,,,,,rec93_2026-08-11_95325372240_is_rubric.json,old check: TIME MISMATCH — check
+91647711668_2026-08-12_0200,old,O94,2026-08-12,02:00,02:30,Bhavani V Vadlakonda,Khushali Prasad,Ishita Aggarwal,91647711668,,,,,,,old check: VERIFIED (other host)
+95511151917_2026-08-12_notime,old,O95,2026-08-12,,,Nasr Mohiuddin Syed,Mudit,Lipakshi Banpurkar,95511151917,,,,,,rec95_2026-08-11_95511151917_is_rubric.json,time unreadable: 02:00 AM – 02:30 AM IST / 04:30 PM – 05:00 PM EDT; old check: VERIFIED (other host)
+98534218986_2026-08-13_0200,old,O96,2026-08-13,02:00,02:30,Bhanu Varshini Penugonda,Naghma Akhtar,Shikhar Mishra,98534218986,,,,,,,old check: WEAK — check; proxy: NOT FOUND — proxy was with a different candid
+93677060828_2026-08-12_0200,old,O97,2026-08-12,02:00,02:30,Sowmya Sree Bachu,Shaily Soni,Yashvi Nagar,93677060828,,,,,,rec97_2026-08-11_93677060828_is_rubric.json,old check: TIME MISMATCH — check
+99396660691_2026-08-12_0330,old,O98,2026-08-12,03:30,04:00,Amish Khadgi,Arch,Ishita Aggarwal,99396660691,,,,,,rec98_2026-08-11_99396660691_is_rubric.json,old check: TIME MISMATCH — check
+97978721303_2026-08-12_0330,old,O99,2026-08-12,03:30,04:00,Sai Nigam Siddam,Naghma Akhtar,Lipakshi Banpurkar,97978721303,,,,,,rec99_2026-08-11_97978721303_is_rubric.json,old check: TIME MISMATCH — check
+93447679682_2026-08-12_2030,old,O100,2026-08-12,20:30,21:30,Bala Kishore Gonga,Mudit,Yashvi Nagar,93447679682,,,,,,rec100_2026-08-12_93447679682_is_rubric.json,old check: TIME MISMATCH — check
+94700142948_2026-08-12_2030,old,O101,2026-08-12,20:30,21:00,Pavani - Rajanala,shailvi saroliya,Harish Sharma,94700142948,,,,,,,"old check: TIME MISMATCH — check; proxy: P3 — proxy hosted at the right time, no third"
+99988032893_2026-08-12_2100,old,O102,2026-08-12,21:00,22:00,Ruturaj Bharat Nilawar,Arch,Abhishek Jain,99988032893,,,,,,rec102_2026-08-12_99988032893_is_rubric.json,
+96116934143_2026-08-12_2100,old,O103,2026-08-12,21:00,21:30,Srividya Medipelly,Lipakshi Banpurkar,Hemangi Shah,96116934143,,,,,,rec103_2026-08-12_96116934143_is_rubric.json,
+99841741448_2026-08-12_0000,old,O104,2026-08-12,00:00,01:00,Nasr Mohiuddin Syed,Khushali Prasad,Prachi Pundir,99841741448,97930313385,,,,,rec104_2026-08-12_99841741448_is_rubric.json,
+91244103835_2026-08-13_0100,old,O105,2026-08-13,01:00,01:30,Bhavani V Vadlakonda,Khushali Prasad,Arch Dedakiya,91244103835,,,,,,rec105_2026-08-12_91244103835_is_rubric.json,old check: TIME MISMATCH — check
+91304660928_2026-08-13_0200,old,O106,2026-08-13,02:00,02:30,"Sindooja Gajam, Ms.",Mudit,Lipakshi Banpurkar,91304660928,,,,,,rec106_2026-08-12_91304660928_is_rubric.json,old check: VERIFIED (other host)
+93275172231_2026-08-13_0230,old,O107,2026-08-13,02:30,03:30,Rohanth Gundu,Mudit,Yashvi Nagar,93275172231,,,,,,rec107_2026-08-12_93275172231_is_rubric.json,old check: TIME MISMATCH — check
+92710291194_2026-08-13_0300,old,O108,2026-08-13,03:00,03:30,Dhruvi Rajubhai . Ramani,Ronak Thakar,Prachi Pundir,92710291194,91210313782,,,,,rec108_2026-08-12_92710291194_is_rubric.json,old check: TIME MISMATCH — check
+92930131650_2026-08-13_0330,old,O109,2026-08-13,03:30,04:00,Soham Amit Shah,Sanjana Gupta,Abhishek Jain,92930131650,96131540203,,,,,rec109_2026-08-12_92930131650_is_rubric.json,old check: TIME MISMATCH — check
+99615028146_nodate_notime,old,O110,,,,Nasr Mohiuddin Syed,Mudit,Hemangi Shah,99615028146,94294436830,,,,,,date unreadable: Soham Amit Shah; time unreadable: 1:00 ET - 1:30 ET
+96131540203_2026-08-13_2030,old,O111,2026-08-13,20:30,21:00,Soham Amit Shah,Nigam,Sanjana Gupta,96131540203,96009815697,,,,,rec111_2026-08-13_96131540203_is_rubric.json,dd/mm/yyyy; pm assumed
+nomid_2026-08-13_0130,old,O112,2026-08-13,01:30,02:00,Sahiti Kota,Maithilya Patle,NO,,98410672577,,,,,,dd/mm/yyyy; am assumed; old check: WEAK — check
+95287341469_2026-08-13_2330,old,O113,2026-08-13,23:30,00:00,Jagadeeshh Kakamolu,Naghma Akhtar,Hemangi Shah,95287341469,95909126286,,,,,rec113_2026-08-13_95287341469_is_rubric.json,dd/mm/yyyy; pm assumed; old check: WEAK — check
+93666620737_2026-08-13_0230,old,O114,2026-08-13,02:30,03:00,Sindooja,Shaily Soni,Arch Dedakiya,93666620737,96744324412,,,,,rec114_2026-08-13_93666620737_is_rubric.json,dd/mm/yyyy; am assumed
+97171097227_2026-08-13_0300,old,O115,2026-08-13,03:00,03:30,Sindooja,Shaily Soni,Margi Chaudhary,97171097227,97466817537,,,,,rec115_2026-08-13_97171097227_is_rubric.json,dd/mm/yyyy; am assumed
+nomid_2026-08-13_0230,old,O116,2026-08-13,02:30,03:00,Bala Kishor,Hemangi Shah,Harish Sharma,,,,,,,,dd/mm/yyyy; am assumed; old check: WEAK — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 92096315730 was hosted by a third person
+nomid_2026-08-14_0230,old,O117,2026-08-14,02:30,03:00,Bhavani V,Naghma Akhtar,Radhika Gupta,,99054088807,,,,,,dd/mm/yyyy; am assumed; proxy: NOT FOUND — proxy was with a different candid
+92424359540_2026-08-14_0300,old,O118,2026-08-14,03:00,03:30,Bhavani V,Naghma Akhtar,Hemangi Shah,92424359540,92726510520,,,,,,"dd/mm/yyyy; am assumed; proxy: P3 — proxy hosted at the right time, no third"
+98791151964_2026-08-14_2200,old,O119,2026-08-14,22:00,22:30,Manisha,Arch,Radhika Gupta,98791151964,94028182729,,,,,rec119_2026-08-14_98791151964_is_rubric.json,dd/mm/yyyy; pm assumed
+96005195230_2026-08-18_2000,old,O120,2026-08-18,20:00,20:30,Vidya Chandrashekhar Nomula,Mudit,Yashvi Nagar,96005195230,,,,,,rec120_2026-08-18_96005195230_is_rubric.json,
+nomid_2026-08-18_2000,old,O121,2026-08-18,20:00,21:00,Mohammed Abdul Nawaaf,Arch,Lipakshi Banpurkar,,99094796220,,,,,,
+99200708693_2026-08-18_2100,old,O122,2026-08-18,21:00,22:00,Soham Amit Shah,Naghma Akhtar,Prachi Pundir,99200708693,91622189017,,,,,rec122_2026-08-18_99200708693_is_rubric.json,
+98558016136_2026-08-18_2030,old,O123,2026-08-18,20:30,21:30,Rohanth Gundu,Mudit,Ishita Aggarwal,98558016136,,,,,,,old check: TIME MISMATCH — check
+92517477002_2026-08-18_2100,old,O124,2026-08-18,21:00,21:30,Manisha Porandla,Shailvi Saroliya,Hemangi Shah,92517477002,93072170415,,,,,rec124_2026-08-18_92517477002_is_rubric.json,
+nomid_2026-08-18_2130,old,O125,2026-08-18,21:30,22:30,Rithwik VNS Musunuri,Divya Prajapati,Yashvi Nagar,,,,,,,,old check: VERIFIED (other host); proxy: NOT FOUND — proxy was with a different candid; found meeting 99140992759 was hosted by a third person
+97040458369_2026-08-18_2330,old,O126,2026-08-18,23:30,00:30,Pavan Kalyan Madatala,Sneha Chaudhary,Shikhar Mishra,97040458369,,,,,,rec126_2026-08-18_97040458369_is_rubric.json,
+93412286044_2026-08-18_2300,old,O127,2026-08-18,23:00,23:30,Pruthvik Reddy Elemati,Sneha Chaudhary,Yashvi Nagar,93412286044,95791931288,,,,,rec127_2026-08-18_93412286044_is_rubric.json,
+98358093923_2026-08-18_0000,old,O128,2026-08-18,00:00,01:00,Santosh Sheelam,Shailvi Saroliya,Vivek Parmar,98358093923,,,,,,rec128_2026-08-18_98358093923_is_rubric.json,
+91264099850_2026-08-19_0000,old,O129,2026-08-19,00:00,00:30,Hitesh Haindhav Gadharthi,Arch,Pranav Sawant,91264099850,,,,,,,"old check: VERIFIED (other host); proxy: P2 — proxy hosted with this candidate, time i"
+91592411646_2026-08-18_0100,old,O130,2026-08-18,01:00,01:30,Sai Chandra Palle,Shailvi Saroliya,Lipakshi Banpurkar,91592411646,,,,,,,"old check: TIME MISMATCH — check; proxy: P2 — proxy hosted with this candidate, time i"
+nomid_2026-08-18_0100,old,O131,2026-08-18,01:00,01:30,Farhan Wajid Mohammed,Shaily Soni,Ronak Thakar,,95555065220,,,,,,proxy: NOT FOUND — proxy was with a different candid
+94220247339_2026-08-18_0230,old,O132,2026-08-18,02:30,03:00,Manali Mahavir Patil,Shailvi Saroliya,Harish Sharma,94220247339,99479951183,,,,,rec132_2026-08-18_94220247339_is_rubric.json,
+nomid_nodate_0330,old,O133,,03:30,04:00,Farhan Wajid Mohammed,Naghma Akhtar,Yashvi Nagar,,99013645304,,,,,,date unreadable: 18 August 2026 (EST); proxy: NOT FOUND — proxy was with a different candid
+93044501457_nodate_2100,old,O134,,21:00,21:30,Amish Khadgi,Ronak Thakar,Arch Dedakiya,93044501457,,,,,,,"date unreadable: 19 August 2026 (EST); old check: TIME MISMATCH — check; proxy: P3 — proxy hosted at the right time, no third"
+99079181294_2026-08-19_2130,old,O135,2026-08-19,21:30,22:00,Soham Amit Shah,Radhika Gupta,Margi Chaudhary,99079181294,91234394783,,,,,rec135_2026-08-19_99079181294_is_rubric.json,
+92308849382_2026-08-18_2130,old,O136,2026-08-18,21:30,22:00,Krishna Kanth Markonda Patnaikuni,Nigam,Vedant Gediya,92308849382,,,,,,rec136_2026-08-19_92308849382_is_rubric.json,old check: VERIFIED (other host)
+nomid_2026-08-18_2200,old,O137,2026-08-18,22:00,22:30,Rithwik VNS Musunuri,Ved Sharma,Shikhar Mishra,,,,,,,,old check: VERIFIED (other host); proxy: NOT FOUND — proxy was with a different candid; found meeting 99140992759 was hosted by a third person
+nomid_2026-08-18_2200,old,O138,2026-08-18,22:00,22:30,Vatsal Vadhavana,Sneha Chaudhary,Ishita Aggarwal,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 94051781334 was hosted by a third person
+nomid_2026-08-19_0030,old,O139,2026-08-19,00:30,01:00,Heema,Hemangi Shah,Lipakshi Banpurkar,,,,,,,,midnight assumed; old check: WEAK — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 94456513417 was hosted by a third person
+nomid_nodate_0230,old,O140,,02:30,03:00,Jagadeesh Vadaplai,Mudit,Vedant Gediya,,,,,,,,date unreadable: Not specified; am assumed; old check: WEAK — check; found meeting 91092272014 was hosted by a third person
+95964007773_2026-08-19_0300,old,O141,2026-08-19,03:00,03:30,Sai Sharan,Shaily Soni,Arch Dedakiya,95964007773,,,,,,rec141_2026-08-19_95964007773_is_rubric.json,dd/mm/yyyy; am assumed
+92095345405_2026-08-19_0300,old,O142,2026-08-19,03:00,03:30,Monis Khan,Mudit,Shikhar Mishra,92095345405,98813886960,,,,,rec142_2026-08-19_92095345405_is_rubric.json,dd/mm/yyyy; am assumed
+93360414639_2026-08-20_2100,old,O143,2026-08-20,21:00,21:30,Shivkumar Kothale,Naghma Akhtar,Prachi Pundir,93360414639,94492918109,,,,,rec143_2026-08-20_93360414639_is_rubric.json,dd/mm/yyyy; pm assumed
+nomid_2026-08-20_2230,old,O144,2026-08-20,22:30,23:00,Thriveen Kumar,Mudit,Radhika Gupta,,,,,,,,dd/mm/yyyy; pm assumed; old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 95775144109 was hosted by a third person
+nomid_2026-08-20_2130,old,O145,2026-08-20,21:30,22:00,Manoj Dannana,Mudit,Vedant Gediya,,,,,,,,dd/mm/yyyy; pm assumed; old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 91499041905 was hosted by a third person
+96807536235_2026-08-20_0330,old,O146,2026-08-20,03:30,04:00,Dhruvi Ramani,Mudit,Harish Sharma,96807536235,96973362912,,,,,rec146_2026-08-20_96807536235_is_rubric.json,dd/mm/yyyy; am assumed
+98781393503_2026-08-21_2000,old,O147,2026-08-21,20:00,20:30,Akash Reddy,Ishita Aggarwal,Harish Sharma,98781393503,99160600877,,,,,rec147_2026-08-21_98781393503_is_rubric.json,dd/mm/yyyy; pm assumed
+nomid_2026-08-21_2330,old,O148,2026-08-21,23:30,00:30,Venkata Jagan,Nigam,Pranav Sawant,,97581721778,,,,,,dd/mm/yyyy; pm assumed; proxy: NOT FOUND — proxy was with a different candid
+95909448039_2026-08-21_0030,old,O149,2026-08-21,00:30,01:00,Sai Sravani Medam,Ishita Aggarwal,Prachi Pundir,95909448039,,,,,,rec149_2026-08-21_95909448039_is_rubric.json,dd/mm/yyyy; midnight assumed; old check: TIME MISMATCH — check
+94177296429_2026-08-21_2130,old,O150,2026-08-21,21:30,22:00,Abdu Raziq,Margi Chaudhary,Radhika Gupta,94177296429,91586284200,,,,,rec150_2026-08-21_94177296429_is_rubric.json,dd/mm/yyyy; pm assumed
+nomid_2026-08-21_0200,old,O151,2026-08-21,02:00,02:30,Divya Anjali Bolimela Umesh,Sanjana Gupta,Radhika Gupta,,,,,,,,dd/mm/yyyy; am assumed; old check: DATE MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 92841866060 was hosted by a third person
+96313902605_2026-08-21_0200,old,O152,2026-08-21,02:00,02:30,Sai Sandeep Gorla,Mudit,Vedant Gediya,96313902605,99728060848,,,,,rec152_2026-08-21_96313902605_is_rubric.json,dd/mm/yyyy; am assumed; old check: WEAK — check
+nomid_2026-08-21_0130,old,O153,2026-08-21,01:30,02:00,Divya Anjali Bolimela Umesh,Maithilya Patle,Radhika Gupta,,,,,,,,"dd/mm/yyyy; am assumed; old check: DATE MISMATCH — check; proxy: P4 — proxy hosted that day, nothing else line; found meeting 93269552054 was hosted by a third person"
+nomid_2026-08-21_0030,old,O154,2026-08-21,00:30,01:00,Hiam,Nigam,Pranav Sawant,,,,,,,,dd/mm/yyyy; midnight assumed; old check: NO MATCH; proxy: NOT FOUND — proxy was with a different candid
+94446663321_2026-08-21_0200,old,O155,2026-08-21,02:00,02:30,Sai Divya,Arch,Shikhar Mishra,94446663321,94446663321,,,,,,dd/mm/yyyy; am assumed
+99258200225_2026-08-21_0330,old,O156,2026-08-21,03:30,04:00,Abhiram Rachakonda,Shaily Soni,Radhika Gupta,99258200225,98251877335,,,,,rec156_2026-08-21_99258200225_is_rubric.json,dd/mm/yyyy; am assumed
+93697256446_2026-08-25_1930,old,O157,2026-08-25,19:30,20:30,Sai Chandra Palle,Ronak Thakar,Arch Dedakiya,93697256446,,,,,,rec159_2026-08-25_93697256446_is_rubric.json,old check: VERIFIED (other host)
+nomid_2026-08-25_2000,old,O158,2026-08-25,20:00,21:00,Priya Kunam,Maithilya Patle,Arch Dedakiya,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 99344272461 was hosted by a third person
+nomid_2026-08-25_2030,old,O159,2026-08-25,20:30,21:00,Saisandeep Gorla,Naghma Akhtar,Arch Dedakiya,,99001220707,,,,,,dd/mm/yyyy; proxy: NOT FOUND — proxy was with a different candid
+nomid_2026-08-25_2030,old,O160,2026-08-25,20:30,21:30,Hitesh Haindhav Gadharthi,Maithilya Patle,Lipakshi Banpurkar,,98718253094,,,,,,proxy: NOT FOUND — proxy was with a different candid
+92190374553_2026-08-25_2030,old,O161,2026-08-25,20:30,21:00,Sai Chandra Palle,Yashvi Nagar,Pranav Sawant,92190374553,96430373216,,,,,rec161_2026-08-25_92190374553_is_rubric.json,dd/mm/yyyy
+nomid_2026-08-25_2100,old,O162,2026-08-25,21:00,21:30,Saisandeep Gorla,Sneha Chaudhary,Arch Dedakiya,,99890607491,,,,,,proxy: NOT FOUND — proxy was with a different candid
+99861469836_2026-08-25_2130,old,O163,2026-08-25,21:30,22:00,Musaif Ali Mohammed,Sneha Chaudhary,Radhika Gupta,99861469836,96444856431,,,,,rec163_2026-08-25_99861469836_is_rubric.json,
+91407846329_2026-08-25_2230,old,O164,2026-08-25,22:30,23:30,Priya Kunam,Mudit,Margi Chaudhary,91407846329,94106904766,,,,,rec164_2026-08-25_91407846329_is_rubric.json,
+nomid_2026-08-26_0000,old,O165,2026-08-26,00:00,00:30,Bhanu Varshini Penugonda,Vedant Gediya,Radhika Gupta,,,,,,,,old check: VERIFIED (other host); proxy: NOT FOUND — proxy was with a different candid; found meeting 94300098482 was hosted by a third person
+nomid_2026-08-26_0030,old,O166,2026-08-26,00:30,01:00,Bala Kishore Gonga,Ronak Chaudhary,Radhika Gupta,,,,,,,,old check: TIME MISMATCH — check; proxy: NOT FOUND — proxy was with a different candid; found meeting 92357364698 was hosted by a third person
+98750439004_2026-08-26_0030,old,O167,2026-08-26,00:30,01:30,Sai Nikhil Samudrala,Radhika Gupta,Margi Chaudhary,98750439004,,,,,,rec167_2026-08-25_98750439004_is_rubric.json,old check: TIME MISMATCH — check
+nomid_2026-08-26_0300,old,O168,2026-08-26,03:00,03:30,Hitesh Haindhav Gadharthi,Mudit,Radhika Gupta,,,,,,,,"old check: TIME MISMATCH — check; proxy: P4 — proxy hosted that day, nothing else line; found meeting 98900610431 was hosted by a third person"
+94818377651_2026-08-26_2130,old,O169,2026-08-26,21:30,22:00,Krishna Kanth Markonda Patnaikuni,Naghma Akhtar,Lipakshi Banpurkar,94818377651,,,,,,rec169_2026-08-26_94818377651_is_rubric.json,old check: TIME MISMATCH — check
+95358112090_2026-08-26_2130,old,O170,2026-08-26,21:30,22:30,Mukul Dev Chhangani,Ronak Chaudhary,Arch Dedakiya,95358112090,,,,,,rec170_2026-08-26_95358112090_is_rubric.json,
+98402429131_2026-08-26_2130,old,O171,2026-08-26,21:30,22:30,Sindooja Gajam,Ronak Thakar,Radhika Gupta,98402429131,,,,,,,"old check: VERIFIED (other host); proxy: P3 — proxy hosted at the right time, no third"
+94360797656_2026-08-26_2200,old,O172,2026-08-26,22:00,23:00,Mohammed Abdul Nawaaf,Radhika Gupta,Margi Chaudhary,94360797656,,,,,,rec172_2026-08-26_94360797656_is_rubric.json,
+96224241547_2026-08-26_2230,old,O173,2026-08-26,22:30,23:00,Manideep Thogiti,Khushali Prasad,Yashvi Nagar,96224241547,93730526704,,,,,rec173_2026-08-26_96224241547_is_rubric.json,
+91398057814_2026-08-27_2000,old,O174,2026-08-27,20:00,20:30,Sri Nandini Kommineni,Maithilya Patle,Pranav Sawant,91398057814,96839616533,,,,,,old check: WEAK — check
+95455663595_2026-08-27_2000,old,O175,2026-08-27,20:00,20:30,Pavani Rajanala,Divya Prajapati,Margi Chaudhary,95455663595,91584506486,,,,,rec175_2026-08-27_95455663595_is_rubric.json,
+94643121879_2026-08-27_2030,old,O176,2026-08-27,20:30,21:00,Mukul Dev Chhangani,Maithilya Patle,Radhika Gupta,94643121879,,,,,,,
+91077896868_2026-08-27_2100,old,O177,2026-08-27,21:00,21:30,Kaushik Sriram,Divya Prajapati,Margi Chaudhary,91077896868,98028881659,,,,,rec177_2026-08-27_91077896868_is_rubric.json,
+94572223238_2026-08-27_2130,old,O178,2026-08-27,21:30,22:00,Tarunteja Obbina,Maithilya Patle,Pranav Sawant,94572223238,95959133308,,,,,,
+nomid_2026-08-27_2200,old,O179,2026-08-27,22:00,22:30,Venkata Jagan Mohan Reddy Pappula,Ronak Chaudhary,Margi Chaudhary,,95375270286,,,,,,proxy: NOT FOUND — proxy was with a different candid
+95829359604_2026-09-01_1930,new,N1,2026-09-01,19:30,20:00,Isha N/A Valiveti,Naghma Akhtar,Yashvi Nagar,95829359604,,,Invisible,Second,System Design,,
+nomid_2026-09-01_1930,new,N2,2026-09-01,19:30,20:00,Rajya Lakshmi Namireddy,Maithilya Patle,Shikhar Mishra,,,,LYRA HEALTH,Second,Other,,
+nomid_2026-09-01_2030,new,N3,2026-09-01,20:30,21:00,Samanta Mahendra Dnyanwadkar,Naghma Akhtar,Hemangi Shah,,,,Everway,Final,Final Round,,
+93889226945_2026-09-01_2030,new,N4,2026-09-01,20:30,21:30,Thriveen KUMAR Chinthakuntla,Maithilya Patle,Radhika Gupta,93889226945,,,ARTA FINANCE,Third,Other,rec183_2026-09-01_93889226945_is_rubric.json,
+99480512919_2026-09-01_2130,new,N5,2026-09-01,21:30,22:30,Sai Nikhil Samudrala,Ronak Chaudhary,Ronak Thakar,99480512919,,,Adobe,Second,AI/ML Coding,rec184_2026-09-01_99480512919_is_rubric.json,
+95097011879_2026-09-01_2330,new,N6,2026-09-01,23:30,00:00,Sai Harideep Valiveru,Radhika Gupta,Margi Chaudhary,95097011879,,,AWEAR AI,Second,Technical Discussion,rec185_2026-09-01_95097011879_is_rubric.json,
+94881300591_2026-09-02_2030,new,N7,2026-09-02,20:30,21:00,Thanshith Kannedari,Ved Sharma,Radhika Gupta,94881300591,,SES-004172,Apple,Second,AI/ML Coding,,
+94725874407_2026-09-02_2030,new,N8,2026-09-02,20:30,21:00,Supraja Vaddi,Nigam,Margi Chaudhary,94725874407,,SES-004173,Indeed,Fifth,AI/ML Coding,rec187_2026-09-02_94725874407_is_rubric.json,
+95828063035_2026-09-02_2030,new,N9,2026-09-02,20:30,21:00,Durga Sarath Chandra NA Kirla,Naghma Akhtar,Yashvi Nagar,95828063035,,,Oracle,Third,System Design,rec188_2026-09-02_95828063035_is_rubric.json,
+94276898102_2026-09-02_2100,new,N10,2026-09-02,21:00,21:30,Jagadeesh Vadapalli,Ronak Chaudhary,Abhishek Jain,94276898102,,,ARTA FINANCE,Fourth,System Design,rec189_2026-09-02_94276898102_is_rubric.json,
+97280277363_2026-09-03_2030,new,N11,2026-09-03,20:30,21:00,Musaif Ali Mohammed,Naghma Akhtar,Radhika Gupta,97280277363,,,Oracle,Second,Coding Round,rec190_2026-09-03_97280277363_is_rubric.json,
+93286939265_2026-09-03_2030,new,N12,2026-09-03,20:30,21:00,Pavani - Rajanala,Ishita Aggarwal,Margi Chaudhary,93286939265,,,Mintlify,Second,Coding Round,rec191_2026-09-03_93286939265_is_rubric.json,
+95558231974_2026-09-03_2130,new,N13,2026-09-03,21:30,22:00,Sowmya Sree Bachu,Naghma Akhtar,Radhika Gupta,95558231974,,,PlayStation/Sony,Second,AI/ML Coding,rec192_2026-09-03_95558231974_is_rubric.json,
+91372833605_2026-09-03_2200,new,N14,2026-09-03,22:00,22:30,Sai Nikhil Samudrala,Naghma Akhtar,Margi Chaudhary,91372833605,,,ARTA FINANCE,Second,Technical Discussion,rec193_2026-09-03_91372833605_is_rubric.json,
+95266134967_2026-09-03_2200,new,N15,2026-09-03,22:00,22:30,Supraja . Vaddi,Khushali Prasad,Radhika Gupta,95266134967,,,INDEED,Sixth,Technical Discussion,,
+93230337157_2026-09-03_2230,new,N16,2026-09-03,22:30,23:00,Sri Nandini Kommineni,Khushali Prasad,Margi Chaudhary,93230337157,,,PERENNIAL AUTONOMY,Second,Technical Discussion,rec195_2026-09-03_93230337157_is_rubric.json,
+92024935963_2026-09-07_0100,new,N17,2026-09-07,01:00,02:00,Sucharitha Reddy Gaddam,Shaily Soni,Sanjana Gupta,92024935963,,SES-004451,Invisible,Second,System Design,rec196_2026-09-07_92024935963_is_rubric.json,am assumed
+95539366583_2026-09-07_0230,new,N18,2026-09-07,02:30,03:00,Monica Challa,Hemangi Shah,Margi Chaudhary,95539366583,,,PEARL,Second,Technical Discussion,rec197_2026-09-07_95539366583_is_rubric.json,mm/dd assumed; am assumed
+92971804195_2026-09-08_2030,new,N19,2026-09-08,20:30,21:00,Hima Keerthana N/A Anumula,Nigam,Hemangi Shah,92971804195,,SES-004476,Oracle,Final,Coding Round,,mm/dd assumed; pm assumed
+97578110628_2026-09-08_2030,new,N20,2026-09-08,20:30,21:00,Sai Shashank NA Karnekanti,Arch,Radhika Gupta,97578110628,,,ANTERIOR,Second,Coding Round,rec199_2026-09-08_97578110628_is_rubric.json,mm/dd assumed; pm assumed
+92025261597_2026-09-08_2230,new,N21,2026-09-08,22:30,23:00,Rakshith n/a Bodakuntla,Naghma Akhtar,Margi Chaudhary,92025261597,,,Hewlett Packard Enterprise,Second,System Design,rec200_2026-09-08_92025261597_is_rubric.json,mm/dd assumed; pm assumed
+91396474383_2026-09-09_0230,new,N22,2026-09-09,02:30,03:00,Abdu Raziq N/A Hidayathulla,Mudit,Radhika Gupta,91396474383,,SES-004505,ARTA FINANCE,Second,Technical Discussion,rec201_2026-09-08_91396474383_is_rubric.json,am assumed
+99795749721_2026-09-08_0330,new,N23,2026-09-08,03:30,04:00,Sai Divya NA Lanka,Shaily Soni,Margi Chaudhary,99795749721,,SES-004518,Apple,Second,Coding Round,rec202_2026-09-08_99795749721_is_rubric.json,mm/dd assumed; am assumed
+98383478228_2026-09-09_2200,new,N24,2026-09-09,22:00,22:30,Kaushik Sriram,Naghma Akhtar,Radhika Gupta,98383478228,,,Upstart Bank,Fourth,Coding Round,rec203_2026-09-09_98383478228_is_rubric.json,mm/dd assumed; pm assumed
+94414016926_2026-09-09_2230,new,N25,2026-09-09,22:30,23:00,Supraja . Vaddi,Naghma Akhtar,Radhika Gupta,94414016926,,,INDEED,Sixth,Technical Discussion,rec204_2026-09-09_94414016926_is_rubric.json,mm/dd assumed; pm assumed
+92588742050_2026-09-09_2330,new,N26,2026-09-09,23:30,00:00,Syed Faraaz Ahmed,Shaily Soni,Radhika Gupta,92588742050,,SES-004563,Oracle,Second,Coding Round,rec205_2026-09-09_92588742050_is_rubric.json,mm/dd assumed; pm assumed
+92117682669_2026-09-09_0300,new,N27,2026-09-09,03:00,03:30,Musaif Ali Mohammed,Mudit,Radhika Gupta,92117682669,,SES-004585,ARTA FINANCE,Second,LeetCode-Style Coding,rec206_2026-09-09_92117682669_is_rubric.json,mm/dd assumed; am assumed
+96017350495_2026-09-09_0300,new,N28,2026-09-09,03:00,03:30,Sai Divya NA Lanka,Shaily Soni,Margi Chaudhary,96017350495,,SES-004589,NEWTONX,Second,Technical Discussion,,mm/dd assumed; am assumed; IS meeting id used by 2 mocks
+96017350495_2026-09-09_0330,new,N29,2026-09-09,03:30,04:00,Sai Divya NA Lanka,Shaily Soni,Margi Chaudhary,96017350495,,SES-004587,Reddit,Second,Coding Round,,mm/dd assumed; am assumed; IS meeting id used by 2 mocks
+97933534793_2026-09-10_2030,new,N30,2026-09-10,20:30,21:30,Supraja . Vaddi,Margi Chaudhary,Radhika Gupta,97933534793,,,INDEED,Fourth,AI/ML Coding,rec209_2026-09-10_97933534793_is_rubric.json,mm/dd assumed; pm assumed
+95444958137_2026-09-10_2230,new,N31,2026-09-10,22:30,23:00,Pavani - Rajanala,Mudit,Margi Chaudhary,95444958137,,SES-004612,Oracle,Second,Coding Round,rec210_2026-09-10_95444958137_is_rubric.json,mm/dd assumed; pm assumed
+96750714918_2026-09-10_0030,new,N32,2026-09-10,00:30,01:00,Sai Nikhil Samudrala,Naghma Akhtar,Radhika Gupta,96750714918,,,ARTA FINANCE,Third,AI/ML Coding,rec211_2026-09-10_96750714918_is_rubric.json,mm/dd assumed; midnight assumed
+93709867043_2026-09-10_0100,new,N33,2026-09-10,01:00,01:30,Thanshith Kannedari,Naghma Akhtar,Margi Chaudhary,93709867043,,,BLUEACORNIC,Second,Hiring Manager,rec212_2026-09-10_93709867043_is_rubric.json,mm/dd assumed; am assumed
+93464623790_2026-09-11_0130,new,N34,2026-09-11,01:30,02:00,Jashya Reddi,Radhika Gupta,Margi Chaudhary,93464623790,,,Crunchbase,Second,Technical Discussion,,mm/dd assumed; am assumed
+91939213921_2026-09-11_2200,new,N35,2026-09-11,22:00,22:30,Srinivas Nuggehalli Venkatesh,Naghma Akhtar,Radhika Gupta,91939213921,,,ARTA FINANCE,Second,Technical Discussion,rec214_2026-09-11_91939213921_is_rubric.json,candidate differs in IR list: 'Musaif Ali Mohammed'; mm/dd assumed; pm assumed
+91886587609_2026-09-14_2130,new,N36,2026-09-14,21:30,22:00,Hitesh Haindhav Gadharthi,Naghma Akhtar,Radhika Gupta,91886587609,,,Audible,Second,Coding Round,rec215_2026-09-14_91886587609_is_rubric.json,pm assumed
+93584992597_2026-09-14_2230,new,N37,2026-09-14,22:30,23:00,Sai Shashank NA Karnekanti,Naghma Akhtar,Margi Chaudhary,93584992597,,,COMPA,Fourth,System Design,rec216_2026-09-14_93584992597_is_rubric.json,pm assumed
+97931722567_2026-09-15_2130,new,N38,2026-09-15,21:30,22:00,Supraja . Vaddi,Nigam,Radhika Gupta,97931722567,,SES-004864,INDEED,Final,Behavioral Round,rec217_2026-09-15_97931722567_is_rubric.json,pm assumed
+nomid_2026-09-15_2230,new,N39,2026-09-15,22:30,23:00,Durga Sarath Chandra NA Kirla,Naghma Akhtar,Tarannum Khan,,,,Capgemini,Third,Executive Round – Client Discussion Meeting,,pm assumed
+nomid_2026-09-15_2330,new,N40,2026-09-15,23:30,00:00,Vinay Kumar Reddy Vavilla,Nigam,Tarannum Khan,,,SES-004867,Salesforce,Second,Coding Round,,pm assumed; SES-004867 given to 2 mocks
+92186196412_2026-09-15_2130,new,N41,2026-09-15,21:30,22:00,Vaishnavi Peddireddy,Ved Sharma,Margi Chaudhary,92186196412,,SES-004867,SmartRecruiters,Second,Hiring Manager,rec220_2026-09-15_92186196412_is_rubric.json,pm assumed; SES-004867 given to 2 mocks
+94302639720_2026-09-15_0000,new,N42,2026-09-15,00:00,00:30,Pavithra None Doma,Naghma Akhtar,Radhika Gupta,94302639720,,,LiveRamp,Second,Coding Round,rec221_2026-09-15_94302639720_is_rubric.json,midnight assumed
+91445472395_2026-09-16_2030,new,N43,2026-09-16,20:30,21:00,Bharath Sai Reddy Mamidi,Mudit,Radhika Gupta,91445472395,,SES-004930,Fluidstack,Second,Technical Discussion,rec222_2026-09-16_91445472395_is_rubric.json,pm assumed
+92105368648_2026-09-16_2230,new,N44,2026-09-16,22:30,23:00,Sai Shashank NA Karnekanti,Ved Sharma,Margi Chaudhary,92105368648,,SES-004928,POINTONE,Third,System Design,rec223_2026-09-16_92105368648_is_rubric.json,pm assumed
+97093261063_2026-09-16_2200,new,N45,2026-09-16,22:00,22:30,Pavani - Rajanala,Margi Chaudhary,Tarannum Khan,97093261063,,,Adyen,Second,Coding Round,,pm assumed
+nomid_2026-09-16_2130,new,N46,2026-09-16,21:30,22:00,Jagadeesh Vadapalli,Harish Sharma,Shikhar Mishra,,,,KAYA AI,Second,Technical Discussion,,pm assumed
+97923649155_2026-09-16_0130,new,N47,2026-09-16,01:30,02:00,Sumukh N/A Ramagiri,Radhika Gupta,Tarannum Khan,97923649155,,,Backbone,Second,System Design,,am assumed
+98584229138_2026-09-17_0030,new,N48,2026-09-17,00:30,01:00,Abhinav Reddy Padamati,Naghma Akhtar,Tarannum Khan,98584229138,,,STRIIM,Second,Hiring Manager,,midnight assumed
+92976214924_2026-09-17_2030,new,N49,2026-09-17,20:30,21:00,AMRUTH REDDY NAGIREDDY PALLI,Naghma Akhtar,Radhika Gupta,92976214924,,,SAMBA,Second,Coding Round,rec228_2026-09-17_92976214924_is_rubric.json,pm assumed
+92325148639_2026-09-17_2130,new,N50,2026-09-17,21:30,22:00,Pavani - Rajanala,Ved Sharma,Tarannum Khan,92325148639,,SES-004931,Adyen,Third,System Design,,pm assumed
+nomid_2026-09-17_2030,new,N51,2026-09-17,20:30,21:00,Isha N/A Valiveti,Ved Sharma,Shikhar Mishra,,,SES-004985,GFIBER,Second,AI/ML Coding,,pm assumed
+93932440021_2026-09-17_2330,new,N52,2026-09-17,23:30,00:00,Bhanu Varshini Varshini Penugonda,Naghma Akhtar,Tarannum Khan,93932440021,,,Tiger Analytics,Final,,,pm assumed
+99723767533_nodate_2100,new,N53,,21:00,21:30,Naveen Reddy Velumala,Rakesh Chauhan,Arch Dedakiya,99723767533,,,ARTA FINANCE,Third,Coding Frontend,rec232_2026-09-17_99723767533_is_rubric.json,date missing; pm assumed
+95205710151_2026-09-18_2300,new,N54,2026-09-18,23:00,23:30,Chetan Lekkalapudi,Nigam,Tarannum Khan,95205710151,,SES-005027,PLANET-PHARMA.COM,Final,,,pm assumed
+97295996540_2026-09-18_2200,new,N55,2026-09-18,22:00,22:30,Sneh Hitendrakumar Patel,Ved Sharma,Tarannum Khan,97295996540,,,Wayve,Second,Hiring Manager,,pm assumed
+95423023273_2026-09-18_2130,new,N56,2026-09-18,21:30,22:00,Bhargavi Venna,Rakesh Chauhan,Harish Sharma,95423023273,,,CLUTCH/DARWINSYSTEMS.AI,Third,Coding Round,,pm assumed
+91362047472_2026-09-18_0030,new,N57,2026-09-18,00:30,01:00,Shrija n/a Purma,Nigam,Margi Chaudhary,91362047472,,SES-005033,Uber,Third,Technical Discussion,rec236_2026-09-18_91362047472_is_rubric.json,midnight assumed
+96770979685_2026-09-21_2130,new,N58,2026-09-21,21:30,22:00,Sai Shashank NA Karnekanti,Naghma Akhtar,Radhika Gupta,96770979685,,,POINTONE,Fourth,Coding Round,rec237_2026-09-21_96770979685_is_rubric.json,pm assumed
+96870150949_2026-09-21_2030,new,N59,2026-09-21,20:30,21:00,Vaishnavi Peddireddy,Naghma Akhtar,Radhika Gupta,96870150949,,,SmartRecruiters,Third,AI/ML Coding,rec238_2026-09-21_96870150949_is_rubric.json,pm assumed
+97998113766_2026-09-22_2030,new,N60,2026-09-22,20:30,21:00,Keerthi N/A Patam,Nigam,Radhika Gupta,97998113766,,SES-005274,Apple,First,System Design,rec239_2026-09-22_97998113766_is_rubric.json,pm assumed
+nomid_2026-09-22_2030,new,N61,2026-09-22,20:30,21:00,Vijayaragupathy Nil Vijayaragunathapandian,Ved Sharma,Ishita Aggarwal,,,SES-005276,Glean,Second,LeetCode-style Coding,,pm assumed
+nomid_2026-09-22_2330,new,N62,2026-09-22,23:30,00:00,Pavani - Rajanala,Nigam,Tarannum Khan,,,SES-005280,Upstart,Third,System Design,,pm assumed
+97475614983_2026-09-22_0030,new,N63,2026-09-22,00:30,01:00,Sai Chandra Palle,Shaily Soni,Radhika Gupta,97475614983,,SES-005293,Lyft,Second,Technical Discussion,,midnight assumed
+nomid_2026-09-22_0230,new,N64,2026-09-22,02:30,03:00,Sai Kowshik Sai Kowshik Kancharla,Shaily Soni,Radhika Gupta,,,SES-005304,SAP,Second,Hiring Manager,,am assumed
+92505658495_2026-09-23_2300,new,N65,2026-09-23,23:00,23:30,Mukul Dev Chhangani,Naghma Akhtar,Tarannum Khan,92505658495,,,Amazon,Final,Final Round,,pm assumed
+nomid_2026-09-23_2130,new,N66,2026-09-23,21:30,22:00,Bhargavi Venna,Naghma Akhtar,Arch Dedakiya,,,,Invisible,Second,System Design,,pm assumed
+97768463930_2026-09-23_0130,new,N67,2026-09-23,01:30,02:00,Supraja Mudireddy,Naghma Akhtar,Tarannum Khan,97768463930,,,Databricks,Second,Hiring Manager,,am assumed
+98401154553_2026-09-23_2330,new,N68,2026-09-23,23:30,00:00,Divya Babbula,Nigam,Margi Chaudhary,98401154553,,SES-005376,GRAVITYINFOSOLUTIONS,Final,Technical Discussion,,pm assumed
+95255123702_2026-09-24_2100,new,N69,2026-09-24,21:00,21:30,Bala Kishore Gonga,Naghma Akhtar,Radhika Gupta,95255123702,,,Planet,Final,System Design,,pm assumed
+92070826883_2026-09-24_2230,new,N70,2026-09-24,22:30,23:00,Keerthi Patam,Naghma Akhtar,Prachi Pundir,92070826883,,,Google,Second,Executive Round,,pm assumed
+nomid_2026-09-24_0000,new,N71,2026-09-24,00:00,00:30,Sai Kowshik Kancharla,Naghma Akhtar,Abhishek Jain,,,,4MindsAI,Third,Executive Round,,midnight assumed; candidate did not join
+nomid_2026-09-24_2330,new,N72,2026-09-24,23:30,00:00,Jagadeesh Vadapalli,Nigam,Lipakshi Banpurkar,,,SES-005430,Databricks,Third,Coding Round,,pm assumed
+92042194080_2026-09-25_2130,new,N73,2026-09-25,21:30,22:00,Sri Bhargav N/A Pernapati,Shaily Soni,Tarannum Khan,92042194080,,SES-005466,T-Mobile,Final,Final Round,,pm assumed
+95610610535_2026-09-25_2200,new,N74,2026-09-25,22:00,22:30,Sumukh N/A Ramagiri,Shaily Soni,Tarannum Khan,95610610535,,SES-005468,Invisible,Second,System Design,,pm assumed
+95415459006_2026-09-25_2030,new,N75,2026-09-25,20:30,21:00,Jagadeesh Kakamolu,Mudit,Tarannum Khan,95415459006,,SES-005469,Crunchyroll,Fourth,Technical Discussion,,pm assumed
+97028058271_2026-09-25_2330,new,N76,2026-09-25,23:30,00:00,Manoj Dannana,Naghma Akhtar,Tarannum Khan,97028058271,,,General Motors,Third,System Design,,pm assumed
+92822756938_2026-09-25_2230,new,N77,2026-09-25,22:30,23:00,Vidya Chandrashekhar Nomula,Ved Sharma,Abhishek Jain,92822756938,,SES-005472,C3 AI,Second,Coding Round,,pm assumed
+97653957065_2026-09-28_2030,new,N78,2026-09-28,20:30,21:00,AMRUTH REDDY NAGIREDDY PALLI,Naghma Akhtar,Margi Chaudhary,97653957065,,,Glean,Second,Technical Discussion,,pm assumed
+99651541701_2026-09-29_2030,new,N79,2026-09-29,20:30,21:00,Sriram Sai Venkata Karicheti,Shaily Soni,Tarannum Khan,99651541701,,SES-005852,Google,Third,System Design,,pm assumed
+95106987001_2026-09-29_2130,new,N80,2026-09-29,21:30,22:00,Bhargavi Venna,Naghma Akhtar,Tarannum Khan,95106987001,,,Pinterest,Final,Technical Discussion,,pm assumed
+92153587033_2026-09-29_2130,new,N81,2026-09-29,21:30,22:00,Bhanu Varshini Varshini Penugonda,Shaily Soni,Abhishek Jain,92153587033,,SES-005854,Tiger Analytics,Final,Final Round,,pm assumed
+nomid_2026-09-29_2330,new,N82,2026-09-29,23:30,00:00,Sai Chandra Palle,Shaily Soni,Tarannum Khan,,,SES-005855,Coupang,Third,AI/ML Coding,,pm assumed
+95448238313_2026-09-30_0200,new,N83,2026-09-30,02:00,02:30,Sai Vikram Kattamanchi,Shaily Soni,Tarannum Khan,95448238313,,SES-005903,Nebius,Second,Technical Discussion,,am assumed
+96901237986_2026-09-30_2330,new,N84,2026-09-30,23:30,00:00,Supraja Mudireddy,Naghma Akhtar,Tarannum Khan,96901237986,,,Databricks,Fifth,Technical Discussion,,pm assumed
+94201886440_2026-10-02_0200,new,N85,2026-10-02,02:00,02:30,Vaishanvu Peddireddy,Shaily Soni,Tarannum Khan,94201886440,,SES-005989,LinkedIn,Final,Coding Round,,mm/dd assumed
+91530316963_2026-10-02_2100,new,N86,2026-10-02,21:00,21:30,Manikanta Pochamalla,Mudit,Tarannum Khan,91530316963,,SES-005991,Stealth AI Startup,Third,System Design,,mm/dd assumed
+97096216127_2026-10-02_2130,new,N87,2026-10-02,21:30,22:00,Lakshmi Priya Bodepudi,Nigam,Tarannum Khan,97096216127,,SES-005997,Invisible,Fourth,Final Round,,mm/dd assumed
+nomid_2026-10-02_2130,new,N88,2026-10-02,21:30,22:00,Kaushik Sriram,Mudit,Shikhar Mishra,,,,Xage,Second,Coding Round,,mm/dd assumed
+nomid_2026-10-02_0030,new,N89,2026-10-02,00:30,01:00,Chaitanya Nenavath,Shaily Soni,Yashvi Nagar,,,SES-006005,Uber,Fifth,Technical Discussion,,mm/dd assumed; candidate did not join
+97158483277_2026-10-05_0030,new,N90,2026-10-05,00:30,01:00,Fnu Tanushka,Nigam,Radhika Gupta,97158483277,,SES-006114,Uber,Third,Behavioral Round,,mm/dd assumed; midnight assumed
+nomid_2026-10-06_2030,new,N91,2026-10-06,20:30,21:00,Rani Sravanthi Devi NA Lankalapalli,Mahima Limbola,Ishita Aggarwal,,,SES-006220,Invisible,,Technical Discussion,,mm/dd assumed; pm assumed
+nomid_2026-10-06_0030,new,N92,2026-10-06,00:30,01:00,Jagadeesh Vadapalli,Nigam,Lipakshi Banpurkar,,,SES-006222,KAYA AI,Final,Executive Round,,mm/dd assumed; midnight assumed
+94018461060_2026-10-06_0300,new,N93,2026-10-06,03:00,03:30,Nikhila NA Potla,Nigam,Harish Sharma,94018461060,,SES-006255,Electronic Arts (EA),Final,AI/ML Coding,,mm/dd assumed; am assumed
+95844074890_2026-10-07_2000,new,N94,2026-10-07,20:00,20:30,Arpit Patel,Nigam,Margi Chaudhary,95844074890,,SES-006268,STG,Second,Executive Round,,mm/dd assumed; pm assumed
+98644872284_2026-10-07_2030,new,N95,2026-10-07,20:30,21:00,Sunil N/A Pothu Raju,Twinkal Gandhi,Yashvi Nagar,98644872284,,SES-006276,SAP,Fourth,Technical Discussion,,mm/dd assumed; pm assumed
+nomid_2026-10-07_2130,new,N96,2026-10-07,21:30,22:00,Rasi Na Nallani,Nigam,Yashvi Nagar,,,SES-006278,4MindsAI,Second,Technical Discussion,,mm/dd assumed; pm assumed; candidate did not join
+96581966501_2026-10-07_2230,new,N97,2026-10-07,22:30,23:00,Rohith N/A Perumandla,Nigam,Radhika Gupta,96581966501,,SES-006288,Invisible,Third,Executive Round,,mm/dd assumed
+98070388660_2026-10-08_2130,new,N98,2026-10-08,21:30,22:00,Hima Keerthana N/A Anumula,Nigam,Pranav Sawant,98070388660,,SES-006331,Cisco,Third,Technical Discussion,,mm/dd assumed; pm assumed
+nomid_2026-10-09_2230,new,N99,2026-10-09,22:30,23:00,Bhargavi Venna,Mudit,Vedant Gediya,,,SES-006373,Stuut,Fifth,System Design,,mm/dd assumed; pm assumed; end = start + 30
+nomid_2026-10-09_2330,new,N100,2026-10-09,23:30,00:00,Tarani NA Sunkay,Shaily Soni,Pranav Sawant,,,SES-006375,Uber,Second,Hiring Manager,,mm/dd assumed
+97383994055_2026-10-13_2130,new,N101,2026-10-13,21:30,22:00,Hitesh Haindhav Gadharthi,Mudit,Prachi Pundir,97383994055,,SES-006596,Expedia Group,Final,Coding Round,,pm assumed
+96979923389_2026-09-15_2300,new,N102,2026-09-15,23:00,23:30,Hima Keerthana N/A Anumula,Nigam,Tarannum Khan,96979923389,,SES-006657,Cisco,Final,Executive Round,,pm assumed; date doubtful per IR notes: Check date: 09/15 is earlier than the listed third round on 10/08/2026; year mis
+nomid_2026-10-21_2330,new,N103,2026-10-21,23:30,00:00,AMRUTH REDDY NAGIREDDY PALLI,Shaily Soni,Tarannum Khan,,,SES-006887,Veeam,Second,Technical Discussion,,pm assumed
+nomid_2026-10-21_0200,new,N104,2026-10-21,02:00,02:30,Bala Kishore Gonga,Nigam,Tarannum Khan,,,SES-006888,NTT DATA AIVista,Second,Hiring Manager,,am assumed; date doubtful per IR notes: Date and Start Time labels were swapped in source; corrected using their values.
+95796847922_2026-10-21_2000,new,N105,2026-10-21,20:00,20:30,Sowmya Sree Bachu,Mudit,Prachi Pundir,95796847922,,SES-006889,Invisible,Fifth,Technical Discussion,,pm assumed
+96009666385_2026-10-21_2230,new,N106,2026-10-21,22:30,23:00,Tharun Kumar Vaspari,Nigam,Tarannum Khan,96009666385,,SES-006890,Disney,Third,Coding Round,,pm assumed
+94866931074_2026-10-22_2030,new,N107,2026-10-22,20:30,21:00,Ananya Reddy Reddy Krothikanti,Shaily Soni,Margi Chaudhary,94866931074,,SES-006935,U.S. Bank,Second,Hiring Manager,,pm assumed
+91967125958_2026-10-22_2330,new,N108,2026-10-22,23:30,00:00,Jaswanth N/A Nalluri,Mudit,Margi Chaudhary,91967125958,,SES-006933,Arta,Second,Technical Discussion,,pm assumed; date doubtful per IR notes: Date and Start Time labels were swapped in source; corrected using their values.
+92228813253_2026-10-23_2100,new,N109,2026-10-23,21:00,21:30,Tarani NA Sunkay,Shaily Soni,Yashvi Nagar,92228813253,,SES-006967,Uber,Fourth and Fifth,Technical Discussion,,pm assumed
+95723399775_2026-11-03_0230,new,N110,2026-11-03,02:30,03:00,Shiva Shankara Vara Prasad Rejintala,Mudit,Tarannum Khan,95723399775,,,,,,,mm/dd assumed; no IR-side row
+95387571839_2026-11-04_2230,new,N111,2026-11-04,22:30,23:00,Manikanta Pochamalla,Shaily Soni,Yashvi Nagar,95387571839,,,,,,,mm/dd assumed; no IR-side row
+nomid_2026-11-04_2200,new,N112,2026-11-04,22:00,22:30,Naveen Reddy Velumala,Mudit,Tarannum Khan,,,,,,,,mm/dd assumed; no IR-side row
+99305773629_2026-11-04_2300,new,N113,2026-11-04,23:00,23:30,Lakshmi Priya Bodepudi,Nigam,Abhishek Jain,99305773629,,,,,,,mm/dd assumed; no IR-side row
+nomid_2026-11-04_0130,new,N114,2026-11-04,01:30,02:00,Umesh Gajula,Shaily Soni,Abhishek Jain,,,,,,,,mm/dd assumed; candidate did not join; no IR-side row
+97774321934_2026-11-05_2330,new,N115,2026-11-05,23:30,00:00,Umesh Gajula,Nigam,Margi Chaudhary,97774321934,,,,,,,mm/dd assumed; no IR-side row
+93943271902_2026-11-05_0300,new,N116,2026-11-05,03:00,03:30,Hima Keerthana N/A Anumula,Mudit,Prachi Pundir,93943271902,,,,,,,mm/dd assumed; no IR-side row
+95369272513_2026-11-13_2330,new,N117,2026-11-13,23:30,00:00,Vaishnavi Peddireddy,Nigam,Yashvi Nagar,95369272513,,,,,,,no IR-side row
+96658580096_2026-11-04_2200,new,N118,2026-11-04,22:00,22:30,Lakshmi Priya Bodepudi,,Tarannum Khan,96658580096,,,,,,,no IR-side row
