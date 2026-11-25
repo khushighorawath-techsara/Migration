@@ -3,14 +3,18 @@
 IR mock backfill: copy each mock's IS recording into Interview-Success/Internal-Interview/.
 
   python3 -u copy_mocks.py copy_plan.csv                     # DRY RUN (default): checks only, writes nothing to S3
+  python3 -u copy_mocks.py copy_plan.csv --links --only O25  # make ONE missing IR shortlink, open it to test
+  python3 -u copy_mocks.py copy_plan.csv --links             # make the rest (safe before the SF load)
   python3 -u copy_mocks.py copy_plan.csv --run --sf-loaded   # real copy; only after the Salesforce load is done
 
 Dry run checks every row and writes copy_check.csv:
   OK              safe to copy
   ALREADY_COPIED  target already complete (re-runs skip it)
   HOLD_CLASH      same candidate has a real-company interview folder overlapping in time -> not copied
-  HOLD_REUSED_ID  the meeting id also appears in other recordings (personal room) -> not copied by this
-                  script, because the linker would put the link on every record with that id
+  OK_OWN_LINK     two of our mocks share one meeting id: copied, and this script makes the shortlink itself
+                  (those Sessions are loaded without the meeting id, so the linker can't mix them up)
+  HOLD_REUSED_ID  the meeting id also appears in recordings on OTHER days (personal room) -> not copied,
+                  because the linker would put the link on every record with that id
   MISSING_SOURCE  source folder has no mp4
   ZOOM_FOUND / ZOOM_NOT_FOUND   for Zoom pulls
   IR_LINK_NEEDED  IR recording without a shortlink (handled in a later step)
@@ -43,6 +47,22 @@ def same(a, b):
         h = [t for t in toks(x) if len(t) >= 4 and t in other]
         return any(t not in COMMON for t in h) or len(h) >= 2
     return hits(a, nb) or hits(b, na)
+
+def _parts(s): return [t for t in re.split(r"[^a-z]+", (s or "").lower()) if len(t) >= 3 and t not in STOP | {"na"}]
+def strong_same(a, b):
+    """Same person for the clash check: 2 shared name parts, one name inside the other, or the same surname (6+ letters)."""
+    ta, tb = _parts(a), _parts(b)
+    if not ta or not tb: return False
+    if len(set(ta) & set(tb)) >= 2: return True
+    na, nb = "".join(ta), "".join(tb)
+    if len(min(na, nb, key=len)) >= 8 and (na in nb or nb in na): return True
+    return any(len(x) >= 6 and x in set(tb) for x in (ta[-1],)) or any(len(x) >= 6 and x in set(ta) for x in (tb[-1],))
+
+def actual_interview_folder(p):
+    s = p.split("/")
+    if len(s) > 1 and s[1] in ("Training", "Internal-Interview"): return False      # IS-team internal sessions
+    if "Unknown_Company" in p or "/Mock/" in p or "/Time-" in p: return False         # no Interview record behind it
+    return p.startswith("Interview-Success/")
 
 def time_folder(t):
     h, m = t.hour, t.minute
@@ -93,11 +113,53 @@ def zoom_find(mid, when):
     files = [f for f in rec.get("recording_files", []) if f.get("download_url")] if "_error" not in rec else []
     return {"start": best[2], "files": files} if files else None
 
+BASE_URL = os.environ.get("DOWNLOAD_BASE_URL", "https://yqygg7wc5g.execute-api.us-east-1.amazonaws.com/download")
+
+def new_id():
+    import secrets, string
+    abc = string.ascii_letters + string.digits
+    while True:
+        i = "".join(secrets.choice(abc) for _ in range(8))
+        try: s3.head_object(Bucket=BUCKET, Key=f"shortlinks/{i}.json")
+        except Exception: return i
+
+def make_shortlink(folder, department):
+    """Same format (version 2) as the shortlinks the linker writes. Returns (url, mp4 key)."""
+    mp4s = [(k, sz) for k, sz in list_keys(folder) if k.lower().endswith(".mp4") and "/analysis/" not in k]
+    if not mp4s: return "", ""
+    key = max(mp4s, key=lambda x: x[1])[0]
+    p = [x for x in folder.split("/") if x]
+    di = next((i for i in range(len(p) - 1, -1, -1) if re.match(r"^\d{4}-\d{2}-\d{2}$", p[i])), None)
+    yi = next((i for i in range(len(p)) if re.match(r"^\d{4}$", p[i])), None)
+    cand_raw = p[yi + 2] if yi is not None and yi + 2 < len(p) else ""
+    host = p[yi - 1] if yi else ""
+    body = {"version": 2, "bucket": BUCKET, "prefix": folder, "default_key": key,
+            "created_at": dt.datetime.now(dt.timezone.utc).isoformat(), "filename": key.rsplit("/", 1)[-1],
+            "candidate": cand_raw.replace("_", " "), "candidate_raw": cand_raw, "company_raw": "",
+            "trainer_raw": host if department == "Training" else "", "meeting_id": p[-1], "meeting_id_raw": p[-1],
+            "interview_date": p[di] if di is not None else "", "round_raw": "", "department": department,
+            "created_by": "ir-mock-backfill"}
+    i = new_id()
+    s3.put_object(Bucket=BUCKET, Key=f"shortlinks/{i}.json", Body=json.dumps(body).encode(), ContentType="application/json")
+    return f"{BASE_URL}?id={i}", key
+
 EXT = {"MP4": "mp4", "M4A": "m4a", "TRANSCRIPT": "vtt", "CC": "vtt", "CHAT": "txt", "TIMELINE": "json"}
 
 def main():
     plan = list(csv.DictReader(open(sys.argv[1])))
     run = "--run" in sys.argv
+    if "--links" in sys.argv:
+        links = []
+        only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None   # test one mock first
+        for r in plan:
+            if r["action"] != "IR_LINK" or (only and r["mock_key"] != only): continue
+            url, key = make_shortlink(r["source"], "Training" if r["source"].startswith("Training/") else "Interview-Success")
+            links.append({"mock_key": r["mock_key"], "side": "IR", "url": url, "mp4_key": key})
+            print(f"  {r['mock_key']} IR -> {url or 'NO MP4'}", flush=True)
+        with open("ir_links.csv", "w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=["mock_key", "side", "url", "mp4_key"]); w.writeheader(); w.writerows(links)
+        print(f"\nIR shortlinks made: {sum(1 for l in links if l['url'])} of {len(links)} -> ir_links.csv")
+        return
     if run and "--sf-loaded" not in sys.argv:
         sys.exit("Real run needs --sf-loaded: the Salesforce Sessions must exist first, or the linker has nowhere to put the links.")
     print("MODE:", "REAL RUN" if run else "DRY RUN (nothing is written to S3)", flush=True)
@@ -135,7 +197,9 @@ def main():
                 if tkeys and len(tkeys) >= len(skeys):
                     res["check"] = "ALREADY_COPIED"
                 else:
-                    others = [p for p in by_mid.get(mid, []) if p not in (src, tgt)]
+                    others = [p for p in by_mid.get(mid, []) if p not in (src, tgt)
+                              and not (folders[p]["date"] and abs((dt.date.fromisoformat(folders[p]["date"]) - dt.date.fromisoformat(f["date"])).days) <= 1)]
+                    shared_in_plan = [x["mock_key"] for x in plan if x["action"] == "COPY_IS" and x["meeting_id"] == mid and x["mock_key"] != r["mock_key"]]
                     # a real-company interview folder for the same candidate, overlapping in time
                     clash = []
                     def win(pt, fallback):
@@ -147,9 +211,8 @@ def main():
                     for dd in [d0] + [str(dt.date.fromisoformat(d0) + dt.timedelta(days=k)) for k in (-1, 1)]:
                         for p in by_date.get(dd, []):
                             g = folders[p]
-                            if p == src or not p.startswith("Interview-Success/") or "/Internal-Interview/" in p: continue
-                            if "Unknown_Company" in p or "/Mock/" in p: continue        # no Interview record -> not an actual interview
-                            if not same(r["candidate"], g["candidate"]): continue
+                            if p == src or not actual_interview_folder(p): continue
+                            if not strong_same(r["candidate"], g["candidate"]): continue
                             b1, b2 = win(participants(p), None)
                             if a1 and b1 and min(a2, b2) > max(a1, b1):
                                 clash.append(p)
@@ -157,6 +220,8 @@ def main():
                         res["check"] = "HOLD_CLASH"; res["detail"] = " | ".join(clash[:3])
                     elif others:
                         res["check"] = "HOLD_REUSED_ID"; res["detail"] = f"{len(others)} other folder(s): " + " | ".join(others[:2])
+                    elif shared_in_plan:
+                        res["check"] = "OK_OWN_LINK"; res["detail"] = f"{len(skeys)} files; same meeting id as {','.join(shared_in_plan)}"
                     else:
                         res["check"] = "OK"; res["detail"] = f"{len(skeys)} files"
         elif r["action"] == "PULL_IS_FROM_ZOOM":
@@ -174,9 +239,9 @@ def main():
         out.append(res)
 
     if run:
-        log = []
+        log, own = [], []
         for res in out:
-            if res["check"] == "OK":
+            if res["check"] in ("OK", "OK_OWN_LINK"):
                 keys = [k for k, _ in list_keys(res["source"]) if "/analysis/" not in k]
                 keys.sort(key=lambda k: k.lower().endswith(".mp4"))           # mp4 last
                 for k in keys:
@@ -184,6 +249,9 @@ def main():
                     s3.copy({"Bucket": BUCKET, "Key": k}, BUCKET, nk)
                     log.append({"mock_key": res["mock_key"], "from": k, "to": nk})
                 print(f"  copied {res['mock_key']}: {len(keys)} files", flush=True)
+                if res["check"] == "OK_OWN_LINK":
+                    url, _ = make_shortlink(res["target"], "Interview-Success")
+                    own.append({"mock_key": res["mock_key"], "side": "IS", "url": url})
             elif res["check"] == "ZOOM_FOUND":
                 tok = zoom_token()
                 files = sorted(res["_zoom"]["files"], key=lambda f: f.get("file_type") == "MP4")   # mp4 last
@@ -198,6 +266,10 @@ def main():
         with open("copy_log.csv", "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=["mock_key", "from", "to"]); w.writeheader(); w.writerows(log)
         print(f"copied/pulled {len(log)} objects -> copy_log.csv")
+        if own:
+            with open("is_own_links.csv", "w", newline="") as fh:
+                w = csv.DictWriter(fh, fieldnames=["mock_key", "side", "url"]); w.writeheader(); w.writerows(own)
+            print(f"own IS shortlinks: {len(own)} -> is_own_links.csv")
 
     for res in out: res.pop("_zoom", None)
     with open("copy_check.csv", "w", newline="") as fh:
